@@ -1,43 +1,24 @@
-===========
-Towel Stuff
-===========
+============
+editdistance
+============
 
-Towel Stuff provides such and such and so and so. You might find
-it most useful for tasks involving <x> and also <y>. Typical usage
-often looks like this::
+Python module for computing edit distances and alignments between sequences.
 
-    #!/usr/bin/env python
+For command line usage, see:
+python editdistance.py --help
 
-    from towelstuff import location
-    from towelstuff import utils
+The library API is modeled after difflib.SequenceMatcher.  This is very similar to difflib, except that this module computes editdistance (Levenshtein distance) rather than the Ratcliff and Oberhelp method that Python's difflib uses.  difflib "does not yield minimal edit sequences, but does tend to yield matches that 'look right' to people."
 
-    if utils.has_towel():
-        print "Your towel is located:", location.where_is_my_towel()
+To see examples of usage, view the difflib documentation:
+http://docs.python.org/2/library/difflib.html
 
-(Note the double-colon and 4-space indent formatting above.)
+This requires Python 2.7+ since it uses argparse for the command line interface.  The rest of the code should be OK with earlier versions of Python
 
-Paragraphs are separated by blank lines. *Italics*, **bold**,
-and ``monospace`` look like this.
+Example API usage:
+import editdistance
+sm = editdistance.SequenceMatcher(a=ref, b=hyp)
+sm.get_opcodes()
+sm.ratio()
+sm.get_matching_blocks()
 
-
-A Section
-=========
-
-Lists look like this:
-
-* First
-
-* Second. Can be multiple lines
-  but must be indented properly.
-
-A Sub-Section
--------------
-
-Numbered lists look like you'd expect:
-
-1. hi there
-
-2. must be going
-
-Urls are http://like.this and links can be
-written `like this <http://www.example.com/foo/bar>`_.
+In addition to the SequenceMatcher methods, distance() and matches() methods are provided which compute the edit distance and the number of matches.
