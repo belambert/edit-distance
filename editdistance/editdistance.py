@@ -122,20 +122,25 @@ class SequenceMatcher:
         raise NotImplementedError()
 
     def ratio(self):
+        """Ratio of matches to the average sequence length"""
         return 2.0* self.matches()/ (len(self.seq1) + len(self.seq2))
 
     def quick_ratio(self):
+        """Same as ratio()"""
         return self.ratio()
 
     def real_quick_ratio(self):
+        """Same as ratio()"""
         return self.ratio()
 
     def distance(self):
+        """Returns the edit distance of the two loaded sequences."""
         if not self.dist:
             self.dist, self._matches = edit_distance(self.seq1, self.seq2, action_function=self.action_function)
         return self.dist
             
     def matches(self):
+        """Returns the number of matches in the alignment of the two sequences."""
         if not self._matches:
             self.dist, self._matches = edit_distance(self.seq1, self.seq2)
         return self._matches
@@ -143,6 +148,11 @@ class SequenceMatcher:
 
 
 def edit_distance(seq1, seq2, action_function=lowest_cost_action):
+    """Computes the edit distance between the two given sequences.
+    This uses the relatively 'fast' method that only constructs
+    two columns of the 2d array.  This function actually uses four columns
+    because we track the number of matches too.
+    """
     matches = 0
     errors = 0
     m = len(seq1)
@@ -194,6 +204,11 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action):
 
 
 def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action):
+    """Similar to edit_distance() except that this function keeps backpointers
+    during the search.  This allows us to return the opcodes (i.e. the specific
+    edits that were used to change from one string to another.  This funtion
+    contrusts the full 2d array (actually it contructs three of them... one
+    for distances, one for matches, and one for backpointers."""
     matches = 0
     errors = 0
     # Create a 2d distance array
@@ -253,6 +268,7 @@ def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action):
     return d[m][n], opcodes
 
 def get_opcodes_from_bp_table(bp):
+    """Given a 2d list structure, collect the opcodes from the best path."""
     x = len(bp) - 1
     y = len(bp[0]) - 1
     opcodes = []
@@ -270,6 +286,7 @@ def get_opcodes_from_bp_table(bp):
     return opcodes
     
 def main():
+    """For testing.  This modules should be used as a library."""
     # Should be 3, 2
     a = ['a', 'b']
     b = ['a', 'c', 'd', 'a', 'b']
