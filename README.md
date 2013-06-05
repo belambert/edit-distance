@@ -20,6 +20,7 @@ For command line usage, see:
 
     python editdistance.py --help
 
+
 API usage
 ---------
 
@@ -50,6 +51,7 @@ Even if the alignment of the two sequences is identical to difflib, get_opcodes(
 It's also possible to compute the maximum number of matches rather than the minimum number of edits:
 
     sm = editdistance.SequenceMatcher(a=ref, b=hyp, action_function=editdistance.highest_match_action)
+
 
 Notes
 -----
