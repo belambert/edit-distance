@@ -12,15 +12,16 @@ The library API is modeled after difflib.SequenceMatcher.  This is very similar 
 
 If you find this library useful or have any comments/criticism, please send me a message!
 
+
 Command line usage
-==================
+------------------
 
 For command line usage, see:
 
     python editdistance.py --help
 
 API usage
-=========
+---------
 
 To see examples of usage, view the difflib documentation:
 http://docs.python.org/2/library/difflib.html
@@ -35,8 +36,9 @@ Example API usage:
     sm.ratio()
     sm.get_matching_blocks()
 
+
 Differences from difflib
-========================
+------------------------
 
 In addition to the SequenceMatcher methods, distance() and matches() methods are provided which compute the edit distance and the number of matches.
 
@@ -48,6 +50,13 @@ Even if the alignment of the two sequences is identical to difflib, get_opcodes(
 It's also possible to compute the maximum number of matches rather than the minimum number of edits:
 
     sm = editdistance.SequenceMatcher(a=ref, b=hyp, action_function=editdistance.highest_match_action)
+
+Notes
+-----
+
+ * This doesn't implement the 'junk' matching stuff in difflib.
+ * Distance/match values computed directly, vs. those computed from alignment don't match right now!
+
 
 
 
