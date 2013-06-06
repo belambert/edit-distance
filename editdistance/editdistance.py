@@ -114,7 +114,14 @@ class SequenceMatcher:
     def get_opcodes(self):
         """Returns a list of opcodes.  Opcodes are the same as defined by difflib."""
         if not self.opcodes:
-            self.dist, self.opcodes = edit_distance_backpointer(self.seq1, self.seq2, action_function=self.action_function)
+            d, m, opcodes= edit_distance_backpointer(self.seq1, self.seq2, action_function=self.action_function)
+            if self.dist:
+                assert (d == self.dist)
+            if self._matches:
+                assert (m == self._matches)
+            self.dist = d
+            self._matches = m
+            self.opcodes = opcodes
         return self.opcodes
           
     def get_grouped_opcodes(self, n=None):
@@ -133,16 +140,30 @@ class SequenceMatcher:
         """Same as ratio()"""
         return self.ratio()
 
+    def _compute_distance_fast(self):
+        """Calls edit_distance, and asserts that if we already have values for
+        matches and distance, that they match."""
+        d, m = edit_distance(self.seq1, self.seq2, action_function=self.action_function)
+        if self.dist:
+            assert (d == self.dist)
+        if self._matches:
+            assert (m == self._matches)
+        self.dist = d
+        self._matches = m        
+
     def distance(self):
-        """Returns the edit distance of the two loaded sequences."""
+        """Returns the edit distance of the two loaded sequences.  This should be
+        a little faster than getting the same information from get_opcodes()."""
         if not self.dist:
-            self.dist, self._matches = edit_distance(self.seq1, self.seq2, action_function=self.action_function)
+            _compute_distance_fast(self)
         return self.dist
             
     def matches(self):
-        """Returns the number of matches in the alignment of the two sequences."""
+        """Returns the number of matches in the alignment of the two sequences.
+        This should be a little faster than getting the same information from
+        get_opcodes()"""
         if not self._matches:
-            self.dist, self._matches = edit_distance(self.seq1, self.seq2)
+            _compute_distance_fast(self)
         return self._matches
 
 
@@ -265,7 +286,7 @@ def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action):
                 raise Exception('Invalid dynamic programming action returned!')                 
 
     opcodes = get_opcodes_from_bp_table(bp)
-    return d[m][n], opcodes
+    return d[m][n], matches[m][n], opcodes
 
 def get_opcodes_from_bp_table(bp):
     """Given a 2d list structure, collect the opcodes from the best path."""
@@ -287,20 +308,19 @@ def get_opcodes_from_bp_table(bp):
     
 def main():
     """For testing.  This modules should be used as a library."""
-    # Should be 3, 2
+    print "Should be 3, 2"
     a = ['a', 'b']
     b = ['a', 'c', 'd', 'a', 'b']
     print edit_distance_backpointer(a, b)
     print edit_distance(a, b)
 
-    # Should be 4, 2
+    print "Should be 4, 2"
     a = ['hi', 'my', 'name', 'is', 'andy']
     b = ['hi', "i'm", 'my', "name's", 'sandy']
     print edit_distance_backpointer(a, b)
     print edit_distance(a, b)
 
-    # Should be 5, 0
-    # Or        6, 1    
+    print "Should be 5, 0,  Or        6, 1?"
     a = ['are', 'you', 'at', 'work', 'now']
     b = ['i', 'feel', 'are', 'saying']
     print edit_distance_backpointer(a, b)
