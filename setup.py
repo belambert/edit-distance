@@ -9,5 +9,5 @@ setup(
     license='LICENSE.txt',
     description='Computing edit distance on arbitrary Python sequences.',
     long_description=open('README.md').read(),
-    install_requires=['numpy'],
+    install_requires=[],
 )
