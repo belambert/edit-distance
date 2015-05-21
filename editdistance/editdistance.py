@@ -155,7 +155,7 @@ class SequenceMatcher:
         """Returns the edit distance of the two loaded sequences.  This should be
         a little faster than getting the same information from get_opcodes()."""
         if not self.dist:
-            _compute_distance_fast(self)
+            self._compute_distance_fast()
         return self.dist
             
     def matches(self):
@@ -163,7 +163,7 @@ class SequenceMatcher:
         This should be a little faster than getting the same information from
         get_opcodes()"""
         if not self._matches:
-            _compute_distance_fast(self)
+            self._compute_distance_fast()
         return self._matches
 
 
