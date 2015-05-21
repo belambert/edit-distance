@@ -59,14 +59,15 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost):
     return best_action     
 
 class SequenceMatcher:
-    """Similar to the difflib SequenceMatcher, but uses Levenshtein/edit distance."""
+    """Similar to the difflib SequenceMatcher, but uses Levenshtein/edit distance.
     
-    # Members:
-    # a - first sequence
-    # b - second sequence
-    # opcodes - the cached opcodes
-    # dist - the cached distance value
-    # _matches - the cached match count
+    Members:
+    a - first sequence
+    b - second sequence
+    opcodes - the cached opcodes
+    dist - the cached distance value
+    _matches - the cached match count
+    """
 
     def __init__(self, a=[], b=[], test=operator.eq, action_function=lowest_cost_action):
         """Initialize the object with sequences a and b.  Optionally, one can specify
@@ -172,7 +173,8 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action):
     """Computes the edit distance between the two given sequences.
     This uses the relatively 'fast' method that only constructs
     two columns of the 2d array.  This function actually uses four columns
-    because we track the number of matches too.
+    because we track the number of matches too.  This returns a tuple
+    of the edit count and match count.
     """
     matches = 0
     errors = 0
@@ -227,9 +229,11 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action):
 def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action):
     """Similar to edit_distance() except that this function keeps backpointers
     during the search.  This allows us to return the opcodes (i.e. the specific
-    edits that were used to change from one string to another.  This funtion
-    contrusts the full 2d array (actually it contructs three of them... one
-    for distances, one for matches, and one for backpointers."""
+    edits that were used to change from one string to another).  This function
+    constructs the full 2d array (actually it constructs three of them... one
+    for distances, one for matches, and one for backpointers.
+    This returns a tuple of: the edit count, match count, and opcode list.
+    """
     matches = 0
     errors = 0
     # Create a 2d distance array
@@ -311,20 +315,29 @@ def main():
     print "Should be 3, 2"
     a = ['a', 'b']
     b = ['a', 'c', 'd', 'a', 'b']
+    sm = SequenceMatcher(a, b)
     print edit_distance_backpointer(a, b)
     print edit_distance(a, b)
+    print sm.distance()
+    print sm.matches()
 
     print "Should be 4, 2"
     a = ['hi', 'my', 'name', 'is', 'andy']
     b = ['hi', "i'm", 'my', "name's", 'sandy']
+    sm = SequenceMatcher(a, b)
     print edit_distance_backpointer(a, b)
     print edit_distance(a, b)
+    print sm.distance()
+    print sm.matches()
 
-    print "Should be 5, 0,  Or        6, 1?"
+    print "Should be 5, 0,  (or possibly 6, 1)"
     a = ['are', 'you', 'at', 'work', 'now']
     b = ['i', 'feel', 'are', 'saying']
+    sm = SequenceMatcher(a, b)
     print edit_distance_backpointer(a, b)
     print edit_distance(a, b)
+    print sm.distance()
+    print sm.matches()
     
 if __name__ == "__main__":
     main()
