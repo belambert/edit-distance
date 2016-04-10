@@ -57,6 +57,7 @@ Notes
 -----
 
  * This doesn't implement the 'junk' matching stuff in difflib.
+ * Distance/match values computed directly, vs. those computed from alignment don't match right now!
 
 
 
