@@ -4,6 +4,9 @@ import sys
 import operator
 
 
+# Cost is basically: was there a match or not.
+# The other numbers are cumulative costs and matches...
+
 def lowest_cost_action(ic, dc, sc, im, dm, sm, cost):
     """Given the following values, choose the action (insertion, deletion,
     or substitution), that results in the lowest cost (ties are broken using
@@ -21,13 +24,13 @@ def lowest_cost_action(ic, dc, sc, im, dm, sm, cost):
     if min_cost == sc and cost == 0:
         best_action = 'equal'
         best_match_count = sm
-    if min_cost == sc and cost == 1:
+    elif min_cost == sc and cost == 1:
         best_action = 'replace'
         best_match_count = sm
-    if min_cost == ic and im > best_match_count:
+    elif min_cost == ic and im > best_match_count:
         best_action = 'insert'
         best_match_count = im
-    if min_cost == dc and dm > best_match_count:
+    elif min_cost == dc and dm > best_match_count:
         best_action = 'delete'
         best_match_count = dm
     return best_action
@@ -51,13 +54,13 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost):
     if max_match == sm and cost == 0:
         best_action = 'equal'
         lowest_cost = sm
-    if max_match == sm and cost == 1:
+    elif max_match == sm and cost == 1:
         best_action = 'replace'
         lowest_cost = sm
-    if max_match == im and ic < lowest_cost:
+    elif max_match == im and ic < lowest_cost:
         best_action = 'insert'
         lowest_cost = ic
-    if max_match == dm and dc < lowest_cost:
+    elif max_match == dm and dc < lowest_cost:
         best_action = 'delete'
         lowest_cost = dc
     return best_action
