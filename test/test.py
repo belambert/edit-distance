@@ -1,7 +1,7 @@
 import unittest
 
-from editdistance import edit_distance
-from editdistance import edit_distance_backpointer
+from edit_distance import edit_distance
+from edit_distance import edit_distance_backpointer
 
 
 class TestEditDistance(unittest.TestCase):

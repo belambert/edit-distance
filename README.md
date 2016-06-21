@@ -1,16 +1,44 @@
 ============
-editdistance
+edit_distance
 ============
 
 Python module for computing edit distances and alignments between sequences.
 
-I needed a way to compute edit distances between sequences in Python.  I wasn't able to find any appropriate libraries that do this so I wrote my own.  There appear to be numerous editdistance libraries available for computing edit distances between two strings, but not between two sequences.
+I needed a way to compute edit distances between sequences in Python.  I wasn't
+able to find any appropriate libraries that do this so I wrote my own.  There
+appear to be numerous edit distance libraries available for computing edit
+distances between two strings, but not between two sequences.
 
-I haven't been able to test this library for correctness yet.  If you can test/verify this, please do!  This is also written entirely in Python.  This implementation could likely be optimized to be faster within Python.  And could probably be *much* faster if implemented in C.
+This is also written entirely in Python.  This implementation could likely be
+optimized to be faster within Python.  And could probably be much faster if
+implemented in C.
 
-The library API is modeled after difflib.SequenceMatcher.  This is very similar to difflib, except that this module computes editdistance (Levenshtein distance) rather than the Ratcliff and Oberhelp method that Python's difflib uses.  difflib "does not yield minimal edit sequences, but does tend to yield matches that 'look right' to people."
+The library API is modeled after difflib.SequenceMatcher.  This is very similar
+to difflib, except that this module computes edit distance (Levenshtein distance)
+rather than the Ratcliff and Oberhelp method that Python's difflib uses.  difflib
+"does not yield minimal edit sequences, but does tend to yield matches that
+'look right' to people."
 
-If you find this library useful or have any comments/criticism, please send me a message!
+If you find this library useful or have any suggestions, please send me a
+message.
+
+
+Installing & uninstalling
+------------------
+
+The easiest way to install is using pip:
+
+    pip install edit_distance
+
+Alternatively you can clone this git repo and install using distutils:
+
+    git clone git@github.com:belambert/edit_distance.git
+    cd edit_distance
+    python setup.py install
+
+To uninstall:
+
+    pip uninstall edit_distance
 
 
 Command line usage
@@ -18,7 +46,7 @@ Command line usage
 
 For command line usage, see:
 
-    python editdistance.py --help
+    python edit_distance.py --help
 
 
 API usage
@@ -31,8 +59,8 @@ This requires Python 2.7+ since it uses argparse for the command line interface.
 
 Example API usage:
 
-    import editdistance
-    sm = editdistance.SequenceMatcher(a=ref, b=hyp)
+    import edit_distance
+    sm = edit_distance.SequenceMatcher(a=ref, b=hyp)
     sm.get_opcodes()
     sm.ratio()
     sm.get_matching_blocks()
@@ -50,14 +78,12 @@ Even if the alignment of the two sequences is identical to difflib, get_opcodes(
 
 It's also possible to compute the maximum number of matches rather than the minimum number of edits:
 
-    sm = editdistance.SequenceMatcher(a=ref, b=hyp, action_function=editdistance.highest_match_action)
-
+    sm = edit_distance.SequenceMatcher(a=ref, b=hyp, action_function=edit_distance.highest_match_action)
 
 Notes
 -----
 
  * This doesn't implement the 'junk' matching stuff in difflib.
- * Distance/match values computed directly, vs. those computed from alignment don't match right now!
 
 
 
