@@ -83,8 +83,4 @@ It's also possible to compute the maximum number of matches rather than the mini
 Notes
 -----
 
- * This doesn't implement the 'junk' matching stuff in difflib.
-
-
-
-
+ * This doesn't implement the 'junk' matching features in difflib.
