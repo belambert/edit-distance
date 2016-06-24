@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='edit_distance',
-    version='0.1.3.9',
+    version='0.2',
     author='Ben Lambert',
     author_email='ben@benjaminlambert.com',
     py_modules=['edit_distance'],
