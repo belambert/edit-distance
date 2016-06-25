@@ -24,7 +24,7 @@ message.
 
 
 Installing & uninstalling
-------------------
+-------------------------
 
 The easiest way to install is using pip:
 
@@ -36,7 +36,7 @@ Alternatively you can clone this git repo and install using distutils:
     cd edit_distance
     python setup.py install
 
-To uninstall:
+To uninstall with pip:
 
     pip uninstall edit_distance
 
