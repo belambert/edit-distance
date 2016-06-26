@@ -9,7 +9,7 @@ setup(
     license='LICENSE.txt',
     description='Computing edit distance on arbitrary Python sequences.',
     url='https://github.com/belambert/editdistance',
-    download_url = 'https://github.com/belambert/editdistance/tarball/0.1', 
+    download_url = 'https://github.com/belambert/editdistance/tarball/0.2.2', 
     keywords=['edit', 'distance', 'editdistance', 'levenshtein'],
     classifiers=[
         "Development Status :: 4 - Beta",
