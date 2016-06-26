@@ -1,5 +1,7 @@
 .PHONY: test
 
+all:
+
 clean:
 	python setup.py clean
 	rm -f MANIFEST
