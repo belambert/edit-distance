@@ -6,6 +6,7 @@ clean:
 	rm -rf dist
 	rm -rf edit_distance.egg-info/
 	rm -rf build
+	rm -rf htmlcov
 	find . -name *.pyc -exec rm -rf '{}' \;
 
 doc:
