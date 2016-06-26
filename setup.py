@@ -2,15 +2,15 @@ from setuptools import setup
 
 setup(
     name='edit_distance',
-    version='0.2',
+    version='0.2.1',
     author='Ben Lambert',
     author_email='ben@benjaminlambert.com',
-    py_modules=['edit_distance'],
+    packages=['edit_distance'],
     license='LICENSE.txt',
     description='Computing edit distance on arbitrary Python sequences.',
     url='https://github.com/belambert/editdistance',
     download_url = 'https://github.com/belambert/editdistance/tarball/0.1', 
-    keywords=['edit', 'distance', 'editdistance','levenshtein'],
+    keywords=['edit', 'distance', 'editdistance', 'levenshtein'],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",

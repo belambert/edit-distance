@@ -201,24 +201,24 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action):
         return n, 0
     if n == 0:
         return m, 0
-    v0 = [0] * (n+1)     # The two 'error' columns
-    v1 = [0] * (n+1)
-    m0 = [0] * (n+1)     # The two 'match' columns
-    m1 = [0] * (n+1)
-    for i in range(1, n+1):
+    v0 = [0] * (n + 1)     # The two 'error' columns
+    v1 = [0] * (n + 1)
+    m0 = [0] * (n + 1)     # The two 'match' columns
+    m1 = [0] * (n + 1)
+    for i in range(1, n + 1):
         v0[i] = i
-    for i in range(1, m+1):
+    for i in range(1, m + 1):
         v1[0] = i + 1
-        for j in range(1, n+1):
-            cost = 0 if seq1[i-1] == seq2[j-1] else 1
+        for j in range(1, n + 1):
+            cost = 0 if seq1[i - 1] == seq2[j - 1] else 1
             # The costs
-            ins_cost = v1[j-1] + 1
+            ins_cost = v1[j - 1] + 1
             del_cost = v0[j] + 1
-            sub_cost = v0[j-1] + cost
+            sub_cost = v0[j - 1] + cost
             # Match counts
-            ins_match = m1[j-1]
+            ins_match = m1[j - 1]
             del_match = m0[j]
-            sub_match = m0[j-1] + int(not cost)
+            sub_match = m0[j - 1] + int(not cost)
 
             action = action_function(ins_cost, del_cost, sub_cost, ins_match,
                                      del_match, sub_match, cost)
@@ -235,7 +235,7 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action):
             else:
                 raise Exception('Invalid dynamic programming option returned!')
                 # Copy the columns over
-        for i in range(0, n+1):
+        for i in range(0, n + 1):
             v0[i] = v1[i]
             m0[i] = m1[i]
     return v1[n], m1[n]
@@ -253,54 +253,54 @@ def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action):
     m = len(seq1)
     n = len(seq2)
     # distances array:
-    d = [[0 for x in range(n+1)] for y in range(m+1)]
+    d = [[0 for x in range(n + 1)] for y in range(m + 1)]
     # backpointer array:
-    bp = [[None for x in range(n+1)] for y in range(m+1)]
+    bp = [[None for x in range(n + 1)] for y in range(m + 1)]
     # matches array:
-    matches = [[0 for x in range(n+1)] for y in range(m+1)]
+    matches = [[0 for x in range(n + 1)] for y in range(m + 1)]
     # source prefixes can be transformed into empty string by
     # dropping all characters
-    for i in range(1, m+1):
+    for i in range(1, m + 1):
         d[i][0] = i
-        bp[i][0] = ['delete', i-1, i, 0, 0]
+        bp[i][0] = ['delete', i - 1, i, 0, 0]
     # target prefixes can be reached from empty source prefix by inserting
     # every characters
-    for j in range(1, n+1):
+    for j in range(1, n + 1):
         d[0][j] = j
-        bp[0][j] = ['insert', 0, 0, j-1, j]
+        bp[0][j] = ['insert', 0, 0, j - 1, j]
     # compute the edit distance...
-    for i in range(1, m+1):
-        for j in range(1, n+1):
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
 
-            cost = 0 if seq1[i-1] == seq2[j-1] else 1
+            cost = 0 if seq1[i - 1] == seq2[j - 1] else 1
             # The costs of each action...
-            ins_cost = d[i][j-1] + 1       # insertion
-            del_cost = d[i-1][j] + 1       # deletion
-            sub_cost = d[i-1][j-1] + cost  # substitution/match
+            ins_cost = d[i][j - 1] + 1       # insertion
+            del_cost = d[i - 1][j] + 1       # deletion
+            sub_cost = d[i - 1][j - 1] + cost  # substitution/match
 
             # The match scores of each action
-            ins_match = matches[i][j-1]
-            del_match = matches[i-1][j]
-            sub_match = matches[i-1][j-1] + int(not cost)
+            ins_match = matches[i][j - 1]
+            del_match = matches[i - 1][j]
+            sub_match = matches[i - 1][j - 1] + int(not cost)
 
             action = action_function(ins_cost, del_cost, sub_cost, ins_match,
                                      del_match, sub_match, cost)
             if action == 'equal':
                 d[i][j] = sub_cost
                 matches[i][j] = sub_match
-                bp[i][j] = ['equal', i-1, i, j-1, j]
+                bp[i][j] = ['equal', i - 1, i, j - 1, j]
             elif action == 'replace':
                 d[i][j] = sub_cost
                 matches[i][j] = sub_match
-                bp[i][j] = ['replace', i-1, i, j-1, j]
+                bp[i][j] = ['replace', i - 1, i, j - 1, j]
             elif action == 'insert':
                 d[i][j] = ins_cost
                 matches[i][j] = ins_match
-                bp[i][j] = ['insert', i-1, i-1, j-1, j]
+                bp[i][j] = ['insert', i - 1, i - 1, j - 1, j]
             elif action == 'delete':
                 d[i][j] = del_cost
                 matches[i][j] = del_match
-                bp[i][j] = ['delete', i-1, i, j-1, j-1]
+                bp[i][j] = ['delete', i - 1, i, j - 1, j - 1]
             else:
                 raise Exception('Invalid dynamic programming action returned!')
 
