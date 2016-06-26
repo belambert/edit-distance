@@ -1,6 +1,7 @@
 .PHONY: test
 
 all:
+	python --version
 
 clean:
 	python setup.py clean
@@ -18,10 +19,10 @@ showdoc:
 	pydoc `find edit_distance -name '*.py'`
 
 test:
-	python3 setup.py test
+	python setup.py test
 
 coverage:
-	python3 -m coverage erase
-	python3 -m coverage run setup.py test
-	python3 -m coverage html
-	python3 -m coverage report
+	python -m coverage erase
+	python -m coverage run setup.py test
+	python -m coverage html
+	python -m coverage report

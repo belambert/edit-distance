@@ -1,3 +1,5 @@
+from __future__ import division
+
 import unittest
 
 from edit_distance import edit_distance_backpointer
