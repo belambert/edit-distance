@@ -1,1 +1,1 @@
-from edit_distance.edit_distance import *
+from edit_distance.code import *
