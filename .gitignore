@@ -1,3 +1,5 @@
 edit_distance.egg-info
 dist
 build
+.coverage
+htmlcov

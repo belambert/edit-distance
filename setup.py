@@ -11,6 +11,7 @@ setup(
     url='https://github.com/belambert/editdistance',
     download_url = 'https://github.com/belambert/editdistance/tarball/0.2.2', 
     keywords=['edit', 'distance', 'editdistance', 'levenshtein'],
+    test_suite='test.test.TestEditDistance',
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
