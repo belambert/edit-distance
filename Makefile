@@ -7,6 +7,7 @@ clean:
 	rm -f *.pyc
 	rm -rf edit_distance.egg-info/
 	rm -rf build
+	rm -rf __pycache__
 
 test:
 	python -m unittest discover test
