@@ -13,11 +13,10 @@ doc:
 	pydoc -w `find edit_distance -name '*.py'`
 
 showdoc:
-	pydoc edit_distance/*
+	pydoc `find edit_distance -name '*.py'`
 
 test:
 	python3 setup.py test
-	# python -m unittest discover test
 
 coverage:
 	python3 -m coverage erase
