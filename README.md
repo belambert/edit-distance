@@ -2,6 +2,10 @@
 edit_distance
 ============
 
+[![Build Status](https://travis-ci.org/belambert/edit_distance.svg?branch=master)](https://travis-ci.org/belambert/edit_distance)
+
+[![PyPI version](https://badge.fury.io/py/edit_distance.svg)](https://badge.fury.io/py/edit_distance)
+
 Python module for computing edit distances and alignments between sequences.
 
 I needed a way to compute edit distances between sequences in Python.  I wasn't
