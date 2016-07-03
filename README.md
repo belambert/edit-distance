@@ -2,9 +2,6 @@
 edit_distance
 ============
 
-.. image:: https://travis-ci.org/belambert/edit_distance.svg?branch=master
-    :target: https://travis-ci.org/belambert/edit_distance
-
 Python module for computing edit distances and alignments between sequences.
 
 I needed a way to compute edit distances between sequences in Python.  I wasn't
