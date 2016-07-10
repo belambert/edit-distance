@@ -25,3 +25,6 @@ coverage:
 	python -m coverage erase
 	python -m coverage run setup.py test
 	python -m coverage report
+
+style:
+	pep8 --max-line-length=120 --ignore=E701,E302

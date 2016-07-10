@@ -194,8 +194,6 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action):
     two columns of the 2d array.  This function actually uses four columns
     because we track the number of matches too.
     """
-    matches = 0
-    errors = 0
     m = len(seq1)
     n = len(seq2)
     # Special, easy cases:
@@ -252,7 +250,6 @@ def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action):
     contrusts the full 2d array (actually it contructs three of them... one
     for distances, one for matches, and one for backpointers."""
     matches = 0
-    errors = 0
     # Create a 2d distance array
     m = len(seq1)
     n = len(seq2)

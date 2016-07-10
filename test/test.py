@@ -77,7 +77,8 @@ class TestEditDistance(unittest.TestCase):
         self.assertTrue(sm.quick_ratio() == 2 / 3)
         self.assertTrue(sm.real_quick_ratio() == 2 / 3)
         self.assertTrue(sm.distance() == 2)
-        self.assertTrue(not sm._compute_distance_fast())  # This doesn't return anything, saves the value in the sm cache.
+        # This doesn't return anything, saves the value in the sm cache.
+        self.assertTrue(not sm._compute_distance_fast())
         self.assertTrue(sm.get_opcodes() == opcodes)
         self.assertTrue(list(sm.get_matching_blocks()) == [[0, 0, 1], [1, 1, 1]])
 
