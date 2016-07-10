@@ -2,7 +2,7 @@
 edit_distance
 ============
 
-[![Build Status](https://travis-ci.org/belambert/edit_distance.svg?branch=master)](https://travis-ci.org/belambert/edit_distance)
+[![Build Status](https://travis-ci.org/belambert/edit-distance.svg?branch=master)](https://travis-ci.org/belambert/edit-distance)
 [![PyPI version](https://badge.fury.io/py/edit_distance.svg)](https://badge.fury.io/py/edit_distance)
 [![Coverage Status](https://coveralls.io/repos/github/belambert/edit_distance/badge.svg?branch=master)](https://coveralls.io/github/belambert/edit_distance?branch=master)
 
