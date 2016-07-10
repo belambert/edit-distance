@@ -24,5 +24,4 @@ test:
 coverage:
 	python -m coverage erase
 	python -m coverage run setup.py test
-	python -m coverage html
 	python -m coverage report
