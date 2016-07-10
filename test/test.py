@@ -8,8 +8,10 @@ from edit_distance import highest_match_action
 from edit_distance import SequenceMatcher
 
 class TestEditDistance(unittest.TestCase):
+    """Class to hold all the tests for this package."""
 
     def test_edit_distance1(self):
+        """Test edit distance between 'ab' and 'acdab'."""
         a = ['a', 'b']
         b = ['a', 'c', 'd', 'a', 'b']
         self.assertTrue(edit_distance(a, b) == (3, 2))
@@ -21,6 +23,7 @@ class TestEditDistance(unittest.TestCase):
         self.assertTrue(edit_distance_backpointer(a, b) == bp_expected_result)
 
     def test_edit_distance2(self):
+        """Test edit distance for 'hi my name is andy'."""
         a = ['hi', 'my', 'name', 'is', 'andy']
         b = ['hi', "i'm", 'my', "name's", 'sandy']
         self.assertTrue(edit_distance(a, b) == (4, 1))
@@ -32,6 +35,8 @@ class TestEditDistance(unittest.TestCase):
         self.assertTrue(edit_distance_backpointer(a, b) == bp_expected_result)
 
     def test_edit_distance_highest_match(self):
+        """Test edit distance for 'hi my name is andy', maximizing matches rather than
+        minimizing edits."""
         a = ['hi', 'my', 'name', 'is', 'andy']
         b = ['hi', "i'm", 'my', "name's", 'sandy']
         self.assertTrue(edit_distance(a, b, action_function=highest_match_action) == (4, 2))
@@ -44,6 +49,7 @@ class TestEditDistance(unittest.TestCase):
         self.assertTrue(edit_distance_backpointer(a, b, action_function=highest_match_action) == bp_expected_result)
 
     def test_edit_distance3(self):
+        """Test for 'are you at work now'."""
         a = ['are', 'you', 'at', 'work', 'now']
         b = ['i', 'feel', 'are', 'saying']
         bp_expected_result = (5, 0, [['delete', 0, 1, 0, 0],
@@ -54,6 +60,7 @@ class TestEditDistance(unittest.TestCase):
         self.assertTrue(edit_distance_backpointer(a, b) == bp_expected_result)
 
     def test_edit_distance4(self):
+        """Test edit distance against an empty list."""
         a = []
         b = ['a', 'c']
         self.assertTrue(edit_distance(a, b) == (2, 0))
@@ -61,6 +68,7 @@ class TestEditDistance(unittest.TestCase):
         self.assertTrue(edit_distance(a, a) == (0, 0))
 
     def test_sequence_matcher(self):
+        """Test the sequence matcher."""
         a = ['a', 'b']
         b = ['a', 'b', 'd', 'c']
         sm = SequenceMatcher(a=a, b=b)

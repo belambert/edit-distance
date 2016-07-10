@@ -227,7 +227,7 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action):
             action = action_function(ins_cost, del_cost, sub_cost, ins_match,
                                      del_match, sub_match, cost)
 
-            if action == 'equal' or action == 'replace':
+            if action in ['equal', 'replace']:
                 v1[j] = sub_cost
                 m1[j] = sub_match
             elif action == 'insert':
