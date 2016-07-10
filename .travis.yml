@@ -13,5 +13,5 @@ install:
 
 # command to run tests
 script:
-  nosetests
-  coverage run --source=edit_distance setup.py test
+  - nosetests
+  - coverage run --source=edit_distance setup.py test
