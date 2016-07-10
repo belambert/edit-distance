@@ -78,12 +78,16 @@ class SequenceMatcher:
       _matches - the cached match count
     """
 
-    def __init__(self, a=[], b=[], test=operator.eq,
+    def __init__(self, a=None, b=None, test=operator.eq,
                  action_function=lowest_cost_action):
         """Initialize the object with sequences a and b.  Optionally, one can
         specify a test function that is used to compare sequence elements.
         This defaults to the built in eq operator (i.e. operator.eq).
         """
+        if a is None:
+            a = []
+        if b is None:
+            b = []
         self.seq1 = a
         self.seq2 = b
         self._reset_object()
