@@ -95,8 +95,8 @@ class SequenceMatcher:
 
     def set_seqs(self, a, b):
         """Specify two alternative sequences -- reset any cached values also."""
-        set_seq1(a)
-        set_seq2(b)
+        self.set_seq1(a)
+        self.set_seq2(b)
         self._reset_object()
 
     def _reset_object(self):
@@ -107,12 +107,12 @@ class SequenceMatcher:
 
     def set_seq1(self, a):
         """Specify a new sequence for sequence 1."""
-        _reset_object()
+        self._reset_object()
         self.seq1 = a
 
     def set_seq2(self, b):
         """Specify a new sequence for sequence 2."""
-        _reset_object()
+        self._reset_object()
         self.seq2 = b
 
     def find_longest_match(self, alo, ahi, blo, bhi):
