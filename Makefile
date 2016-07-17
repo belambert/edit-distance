@@ -23,7 +23,7 @@ test:
 
 coverage:
 	python -m coverage erase
-	python -m coverage run setup.py test
+	python -m coverage run --source edit_distance setup.py test
 	python -m coverage report
 
 style:
