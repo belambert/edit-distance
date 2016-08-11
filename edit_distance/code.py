@@ -92,6 +92,7 @@ class SequenceMatcher:
         self.seq2 = b
         self._reset_object()
         self.action_function = action_function
+        self.test = test
 
     def set_seqs(self, a, b):
         """Specify two alternative sequences -- reset any cached values also."""
@@ -133,7 +134,8 @@ class SequenceMatcher:
         difflib."""
         if not self.opcodes:
             d, m, opcodes = edit_distance_backpointer(self.seq1, self.seq2,
-                                                      action_function=self.action_function)
+                                                      action_function=self.action_function,
+                                                      test=self.test)
             if self.dist:
                 assert (d == self.dist)
             if self._matches:
@@ -163,7 +165,8 @@ class SequenceMatcher:
         """Calls edit_distance, and asserts that if we already have values for
         matches and distance, that they match."""
         d, m = edit_distance(self.seq1, self.seq2,
-                             action_function=self.action_function)
+                             action_function=self.action_function,
+                             test=self.test)
         if self.dist:
             assert (d == self.dist)
         if self._matches:
@@ -188,7 +191,7 @@ class SequenceMatcher:
         return self._matches
 
 
-def edit_distance(seq1, seq2, action_function=lowest_cost_action):
+def edit_distance(seq1, seq2, action_function=lowest_cost_action, test=operator.eq):
     """Computes the edit distance between the two given sequences.
     This uses the relatively 'fast' method that only constructs
     two columns of the 2d array.  This function actually uses four columns
@@ -212,7 +215,7 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action):
     for i in range(1, m + 1):
         v1[0] = i + 1
         for j in range(1, n + 1):
-            cost = 0 if seq1[i - 1] == seq2[j - 1] else 1
+            cost = 0 if test(seq1[i - 1], seq2[j - 1]) else 1
             # The costs
             ins_cost = v1[j - 1] + 1
             del_cost = v0[j] + 1
@@ -243,7 +246,7 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action):
     return v1[n], m1[n]
 
 
-def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action):
+def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action, test=operator.eq):
     """Similar to edit_distance() except that this function keeps backpointers
     during the search.  This allows us to return the opcodes (i.e. the specific
     edits that were used to change from one string to another.  This funtion
@@ -273,7 +276,7 @@ def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action):
     for i in range(1, m + 1):
         for j in range(1, n + 1):
 
-            cost = 0 if seq1[i - 1] == seq2[j - 1] else 1
+            cost = 0 if test(seq1[i - 1], seq2[j - 1]) else 1
             # The costs of each action...
             ins_cost = d[i][j - 1] + 1       # insertion
             del_cost = d[i - 1][j] + 1       # deletion
