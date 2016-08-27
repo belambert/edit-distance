@@ -7,5 +7,10 @@ python:
   - "3.5"
   - "3.5-dev" # 3.5 development branch
   - "nightly" # currently points to 3.6-dev
-# command to run tests
-script: nosetests
+install:
+  - pip install coveralls
+script:
+  - python setup.py test
+  - python -m coverage run --source edit_distance setup.py test
+after_success:
+  - coveralls
