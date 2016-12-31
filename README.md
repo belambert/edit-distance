@@ -3,7 +3,7 @@ edit_distance
 ============
 
 [![Build Status](https://travis-ci.org/belambert/edit-distance.svg?branch=master)](https://travis-ci.org/belambert/edit-distance)
-[![PyPI version](https://badge.fury.io/py/edit_distance.svg)](https://badge.fury.io/py/edit_distance)
+[![PyPI version](https://badge.fury.io/py/Edit_Distance.svg)](https://badge.fury.io/py/Edit_Distance)
 [![Coverage Status](https://coveralls.io/repos/github/belambert/edit-distance/badge.svg?branch=master)](https://coveralls.io/github/belambert/edit-distance?branch=master)
 
 Python module for computing edit distances and alignments between sequences.
