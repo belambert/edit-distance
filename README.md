@@ -45,14 +45,6 @@ To uninstall with pip:
     pip uninstall edit_distance
 
 
-Command line usage
-------------------
-
-For command line usage, see:
-
-    python edit_distance.py --help
-
-
 API usage
 ---------
 
