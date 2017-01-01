@@ -31,19 +31,21 @@ Installing & uninstalling
 -------------------------
 
 The easiest way to install is using pip:
-
-    pip install edit_distance
+```
+pip install edit_distance
+```
 
 Alternatively you can clone this git repo and install using distutils:
-
-    git clone git@github.com:belambert/edit_distance.git
-    cd edit_distance
-    python setup.py install
+```
+git clone git@github.com:belambert/edit_distance.git
+cd edit_distance
+python setup.py install
+```
 
 To uninstall with pip:
-
-    pip uninstall edit_distance
-
+```
+pip uninstall edit_distance
+```
 
 API usage
 ---------
@@ -55,24 +57,25 @@ This requires Python 2.7+ since it uses argparse for the command line
 interface.  The rest of the code should be OK with earlier versions of Python
 
 Example API usage:
-
-    import edit_distance
-    ref = [1, 2, 3, 4]
-    hyp = [1, 2, 4, 5, 6]
-    sm = edit_distance.SequenceMatcher(a=ref, b=hyp)
-    sm.get_opcodes()
-    sm.ratio()
-    sm.get_matching_blocks()
-
+```
+import edit_distance
+ref = [1, 2, 3, 4]
+hyp = [1, 2, 4, 5, 6]
+sm = edit_distance.SequenceMatcher(a=ref, b=hyp)
+sm.get_opcodes()
+sm.ratio()
+sm.get_matching_blocks()
+```
 
 Differences from difflib
 ------------------------
 
 In addition to the `SequenceMatcher` methods, `distance()` and `matches()` methods 
 are provided which compute the edit distance and the number of matches.
-
-    sm.distance()
-    sm.matches()
+```
+sm.distance()
+sm.matches()
+```
 
 Even if the alignment of the two sequences is identical to `difflib`, 
 `get_opcodes()` and `get_matching_blocks()` may return slightly different 
@@ -81,9 +84,10 @@ operations, and thus should never span two or more characters.
 
 It's also possible to compute the maximum number of matches rather than the 
 minimum number of edits:
-
-    sm = edit_distance.SequenceMatcher(a=ref, b=hyp, 
-        action_function=edit_distance.highest_match_action)
+```
+sm = edit_distance.SequenceMatcher(a=ref, b=hyp, 
+     action_function=edit_distance.highest_match_action)
+```
 
 Notes
 -----
