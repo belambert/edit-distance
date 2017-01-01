@@ -31,19 +31,19 @@ Installing & uninstalling
 -------------------------
 
 The easiest way to install is using pip:
-```
+```bash
 pip install edit_distance
 ```
 
 Alternatively you can clone this git repo and install using distutils:
-```
+```bash
 git clone git@github.com:belambert/edit_distance.git
 cd edit_distance
 python setup.py install
 ```
 
 To uninstall with pip:
-```
+```bash
 pip uninstall edit_distance
 ```
 
@@ -57,7 +57,7 @@ This requires Python 2.7+ since it uses argparse for the command line
 interface.  The rest of the code should be OK with earlier versions of Python
 
 Example API usage:
-```
+```python
 import edit_distance
 ref = [1, 2, 3, 4]
 hyp = [1, 2, 4, 5, 6]
@@ -72,7 +72,7 @@ Differences from difflib
 
 In addition to the `SequenceMatcher` methods, `distance()` and `matches()` methods 
 are provided which compute the edit distance and the number of matches.
-```
+```python
 sm.distance()
 sm.matches()
 ```
@@ -84,7 +84,7 @@ operations, and thus should never span two or more characters.
 
 It's also possible to compute the maximum number of matches rather than the 
 minimum number of edits:
-```
+```python
 sm = edit_distance.SequenceMatcher(a=ref, b=hyp, 
      action_function=edit_distance.highest_match_action)
 ```
