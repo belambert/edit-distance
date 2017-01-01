@@ -83,7 +83,6 @@ class TestEditDistance(unittest.TestCase):
         self.assertTrue(sm.get_opcodes() == opcodes)
         self.assertTrue(list(sm.get_matching_blocks()) == [[0, 0, 1], [1, 1, 1]])
 
-
     def test_sequence_matcher2(self):
         """Test the sequence matcher."""
         a = ['a', 'b']
@@ -94,7 +93,7 @@ class TestEditDistance(unittest.TestCase):
         self.assertTrue(sm.distance() == 2)
         sm.set_seqs(b, a)
         self.assertTrue(sm.distance() == 2)
-        
+
     def test_unsupported(self):
         a = ['a', 'b']
         b = ['a', 'b', 'd', 'c']
