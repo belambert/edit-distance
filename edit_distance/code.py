@@ -335,19 +335,19 @@ def main():
     """Read two files line-by-line and print edit distances between each pair
     of lines. Will terminate at the end of the shorter of the two files."""
 
+    if len(sys.argv) != 3:
+        print('Usage: {} <file1> <file2>'.format(sys.argv[0]))
+        exit(-1)
     file1 = sys.argv[1]
     file2 = sys.argv[2]
 
-    print(file1)
-    print(file2)
-
     with open(file1) as f1, open(file2) as f2:
         for line1, line2 in zip(f1, f2):
-            print(line1.strip())
-            print(line2.strip())
-            print(edit_distance_backpointer(line1.split(), line2.split()))
-            print(edit_distance(line1.split(), line2.split()))
-
+            print("Line 1: {}".format(line1.strip()))
+            print("Line 2: {}".format(line2.strip()))
+            dist, matches, opcodes = edit_distance_backpointer(line1.split(), line2.split())
+            print('Distance: {}'.format(dist))
+            print('=' * 80)
 
 if __name__ == "__main__":
     main()

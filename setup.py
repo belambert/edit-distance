@@ -21,5 +21,10 @@ setup(
         "Topic :: Text Processing",
         "Topic :: Utilities",
         "License :: OSI Approved :: BSD License"
-    ]
+    ],
+    entry_points={
+        'console_scripts': [
+            'edit-distance = edit_distance.code:main'
+        ]
+    }
 )
