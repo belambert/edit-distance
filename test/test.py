@@ -73,6 +73,7 @@ class TestEditDistance(unittest.TestCase):
         b = ['a', 'b', 'd', 'c']
         sm = SequenceMatcher(a=a, b=b)
         opcodes = [['equal', 0, 1, 0, 1], ['equal', 1, 2, 1, 2], ['insert', 1, 1, 2, 3], ['insert', 1, 1, 3, 4]]
+        self.assertTrue(sm.distance() == 2)
         self.assertTrue(sm.ratio() == 2 / 3)
         self.assertTrue(sm.quick_ratio() == 2 / 3)
         self.assertTrue(sm.real_quick_ratio() == 2 / 3)
@@ -82,9 +83,23 @@ class TestEditDistance(unittest.TestCase):
         self.assertTrue(sm.get_opcodes() == opcodes)
         self.assertTrue(list(sm.get_matching_blocks()) == [[0, 0, 1], [1, 1, 1]])
 
-    # def test_unsupported(self):
-    #     a = ['a', 'b']
-    #     b = ['a', 'b', 'd', 'c']
-    #     sm = SequenceMatcher(a=a, b=b)
-    #     self.assertRaises(NotImplementedError, sm.find_longest_match(1, 2, 3, 4))
-    #     self.assertRaises(NotImplementedError, sm.get_grouped_opcodes())
+
+    def test_sequence_matcher2(self):
+        """Test the sequence matcher."""
+        a = ['a', 'b']
+        b = ['a', 'b', 'd', 'c']
+        sm = SequenceMatcher()
+        sm.set_seq1(a)
+        sm.set_seq2(b)
+        self.assertTrue(sm.distance() == 2)
+        sm.set_seqs(b, a)
+        self.assertTrue(sm.distance() == 2)
+        
+    def test_unsupported(self):
+        a = ['a', 'b']
+        b = ['a', 'b', 'd', 'c']
+        sm = SequenceMatcher(a=a, b=b)
+        with self.assertRaises(NotImplementedError):
+            sm.find_longest_match(1, 2, 3, 4)
+        with self.assertRaises(NotImplementedError):
+            sm.get_grouped_opcodes()
