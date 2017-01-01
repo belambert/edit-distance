@@ -13,7 +13,7 @@ able to find any appropriate libraries that do this so I wrote my own.  There
 appear to be numerous edit distance libraries available for computing edit
 distances between two strings, but not between two sequences.
 
-This is also written entirely in Python.  This implementation could likely be
+This is written entirely in Python.  This implementation could likely be
 optimized to be faster within Python.  And could probably be much faster if
 implemented in C.
 
@@ -65,6 +65,8 @@ interface.  The rest of the code should be OK with earlier versions of Python
 Example API usage:
 
     import edit_distance
+    ref = [1, 2, 3, 4]
+    hyp = [1, 2, 4, 5, 6]
     sm = edit_distance.SequenceMatcher(a=ref, b=hyp)
     sm.get_opcodes()
     sm.ratio()
@@ -74,14 +76,14 @@ Example API usage:
 Differences from difflib
 ------------------------
 
-In addition to the SequenceMatcher methods, distance() and matches() methods 
+In addition to the `SequenceMatcher` methods, `distance()` and `matches()` methods 
 are provided which compute the edit distance and the number of matches.
 
     sm.distance()
     sm.matches()
 
-Even if the alignment of the two sequences is identical to difflib, 
-get_opcodes() and get_matching_blocks() may return slightly different 
+Even if the alignment of the two sequences is identical to `difflib`, 
+`get_opcodes()` and `get_matching_blocks()` may return slightly different 
 sequences.  The opcodes returned by this library represent individual character 
 operations, and thus should never span two or more characters.
 
@@ -89,7 +91,7 @@ It's also possible to compute the maximum number of matches rather than the
 minimum number of edits:
 
     sm = edit_distance.SequenceMatcher(a=ref, b=hyp, 
-action_function=edit_distance.highest_match_action)
+        action_function=edit_distance.highest_match_action)
 
 Notes
 -----
