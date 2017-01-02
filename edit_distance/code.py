@@ -37,7 +37,6 @@ def lowest_cost_action(ic, dc, sc, im, dm, sm, cost):
         best_match_count = dm
     return best_action
 
-
 def highest_match_action(ic, dc, sc, im, dm, sm, cost):
     """Given the following values, choose the action (insertion, deletion, or
     substitution), that results in the highest match score (ties are broken
@@ -50,6 +49,7 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost):
     * dm - deletion match (score)
     * sm - substitution match (score)
     """
+    # pylint: disable=unused-argument
     best_action = None
     lowest_cost = float("inf")
     max_match = max(im, dm, sm)
