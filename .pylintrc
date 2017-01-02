@@ -1,4 +1,5 @@
 [MESSAGES CONTROL]
+disable = too-many-arguments, too-many-locals
 
 [BASIC]
 # Regular expression which should only match correct argument names

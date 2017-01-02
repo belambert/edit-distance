@@ -1,11 +1,13 @@
 # -*- mode: Python;-*-
+"""
+Code for computing edit distances.
+"""
 
 import sys
 import operator
 
-
 # Cost is basically: was there a match or not.
-# The other numbers are cumulative costs and matches...
+# The other numbers are cumulative costs and matches.
 
 def lowest_cost_action(ic, dc, sc, im, dm, sm, cost):
     """Given the following values, choose the action (insertion, deletion,
@@ -93,6 +95,9 @@ class SequenceMatcher:
         self._reset_object()
         self.action_function = action_function
         self.test = test
+        self.dist = None
+        self._matches = None
+        self.opcodes = None
 
     def set_seqs(self, a, b):
         """Specify two alternative sequences -- reset any cached values also."""
@@ -137,9 +142,9 @@ class SequenceMatcher:
                                                       action_function=self.action_function,
                                                       test=self.test)
             if self.dist:
-                assert (d == self.dist)
+                assert d == self.dist
             if self._matches:
-                assert (m == self._matches)
+                assert m == self._matches
             self.dist = d
             self._matches = m
             self.opcodes = opcodes
@@ -168,9 +173,9 @@ class SequenceMatcher:
                              action_function=self.action_function,
                              test=self.test)
         if self.dist:
-            assert (d == self.dist)
+            assert d == self.dist
         if self._matches:
-            assert (m == self._matches)
+            assert m == self._matches
         self.dist = d
         self._matches = m
 
@@ -345,7 +350,7 @@ def main():
         for line1, line2 in zip(f1, f2):
             print("Line 1: {}".format(line1.strip()))
             print("Line 2: {}".format(line2.strip()))
-            dist, matches, opcodes = edit_distance_backpointer(line1.split(), line2.split())
+            dist, _, _ = edit_distance_backpointer(line1.split(), line2.split())
             print('Distance: {}'.format(dist))
             print('=' * 80)
 
