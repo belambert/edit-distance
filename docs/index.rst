@@ -11,7 +11,14 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+Doc
+___
 
+.. automodule:: edit_distance
+   :members:
+   
+.. autoclass:: edit_distance.SequenceMatcher
+   :members:
 
 Indices and tables
 ==================
