@@ -13,11 +13,17 @@ def lowest_cost_action(ic, dc, sc, im, dm, sm, cost):
     """Given the following values, choose the action (insertion, deletion,
     or substitution), that results in the lowest cost (ties are broken using
     the 'match' score).  This is used within the dynamic programming algorithm.
+
     * ic - insertion cost
+
     * dc - deletion cost
+
     * sc - substitution cost
+
     * im - insertion match (score)
+
     * dm - deletion match (score)
+
     * sm - substitution match (score)
     """
     best_action = None
@@ -42,11 +48,17 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost):
     substitution), that results in the highest match score (ties are broken
     using the distance values).  This is used within the dynamic programming
     algorithm.
+
     * ic - insertion cost
+
     * dc - deletion cost
+
     * sc - substitution cost
+
     * im - insertion match (score)
+
     * dm - deletion match (score)
+
     * sm - substitution match (score)
     """
     # pylint: disable=unused-argument
@@ -69,22 +81,15 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost):
 
 
 class SequenceMatcher:
-    """Similar to the difflib SequenceMatcher, but uses Levenshtein/edit
+    """Similar to the :py:mod:`difflib` :py:class:`~difflib.SequenceMatcher`, but uses Levenshtein/edit
     distance.
-
-    Members:
-      a - first sequence
-      b - second sequence
-      opcodes - the cached opcodes
-      dist - the cached distance value
-      _matches - the cached match count
     """
 
     def __init__(self, a=None, b=None, test=operator.eq,
                  action_function=lowest_cost_action):
         """Initialize the object with sequences a and b.  Optionally, one can
         specify a test function that is used to compare sequence elements.
-        This defaults to the built in eq operator (i.e. operator.eq).
+        This defaults to the built in ``eq`` operator (i.e. :py:func:`operator.eq`).
         """
         if a is None:
             a = []
@@ -100,7 +105,7 @@ class SequenceMatcher:
         self.opcodes = None
 
     def set_seqs(self, a, b):
-        """Specify two alternative sequences -- reset any cached values also."""
+        """Specify two alternative sequences -- reset any cached values."""
         self.set_seq1(a)
         self.set_seq2(b)
         self._reset_object()
@@ -112,12 +117,12 @@ class SequenceMatcher:
         self._matches = None
 
     def set_seq1(self, a):
-        """Specify a new sequence for sequence 1."""
+        """Specify a new sequence for sequence 1, resetting cached values."""
         self._reset_object()
         self.seq1 = a
 
     def set_seq2(self, b):
-        """Specify a new sequence for sequence 2."""
+        """Specify a new sequence for sequence 2, resetting cached values."""
         self._reset_object()
         self.seq2 = b
 
@@ -126,9 +131,9 @@ class SequenceMatcher:
         raise NotImplementedError()
 
     def get_matching_blocks(self):
-        """Similar to get_opcodes(), but returns only the opcodes that are
-        'equal' and returns them in a somewhat different format
-        (i.e. (i, j, n) )."""
+        """Similar to :py:meth:`get_opcodes`, but returns only the opcodes that are
+        equal and returns them in a somewhat different format
+        (i.e. ``(i, j, n)`` )."""
         opcodes = self.get_opcodes()
         match_opcodes = filter(lambda x: x[0] == 'equal', opcodes)
         return map(lambda opcode: [opcode[1], opcode[3], opcode[2] - opcode[1]],
@@ -136,7 +141,7 @@ class SequenceMatcher:
 
     def get_opcodes(self):
         """Returns a list of opcodes.  Opcodes are the same as defined by
-        difflib."""
+        :py:mod:`difflib`."""
         if not self.opcodes:
             d, m, opcodes = edit_distance_backpointer(self.seq1, self.seq2,
                                                       action_function=self.action_function,
@@ -155,15 +160,15 @@ class SequenceMatcher:
         raise NotImplementedError()
 
     def ratio(self):
-        """Ratio of matches to the average sequence length"""
+        """Ratio of matches to the average sequence length."""
         return 2.0 * self.matches() / (len(self.seq1) + len(self.seq2))
 
     def quick_ratio(self):
-        """Same as ratio()"""
+        """Same as :py:meth:`ratio`."""
         return self.ratio()
 
     def real_quick_ratio(self):
-        """Same as ratio()"""
+        """Same as :py:meth:`ratio`."""
         return self.ratio()
 
     def _compute_distance_fast(self):
@@ -182,7 +187,7 @@ class SequenceMatcher:
     def distance(self):
         """Returns the edit distance of the two loaded sequences.  This should
         be a little faster than getting the same information from
-        get_opcodes()."""
+        :py:meth:`get_opcodes`."""
         if not self.dist:
             self._compute_distance_fast()
         return self.dist
@@ -190,7 +195,7 @@ class SequenceMatcher:
     def matches(self):
         """Returns the number of matches in the alignment of the two sequences.
         This should be a little faster than getting the same information from
-        get_opcodes()"""
+        :py:meth:`get_opcodes`."""
         if not self._matches:
             self._compute_distance_fast()
         return self._matches
@@ -198,8 +203,8 @@ class SequenceMatcher:
 
 def edit_distance(seq1, seq2, action_function=lowest_cost_action, test=operator.eq):
     """Computes the edit distance between the two given sequences.
-    This uses the relatively 'fast' method that only constructs
-    two columns of the 2d array.  This function actually uses four columns
+    This uses the relatively fast method that only constructs
+    two columns of the 2d array for edits.  This function actually uses four columns
     because we track the number of matches too.
     """
     m = len(seq1)
@@ -252,11 +257,11 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action, test=operator.
 
 
 def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action, test=operator.eq):
-    """Similar to edit_distance() except that this function keeps backpointers
+    """Similar to :py:func:`~edit_distance.edit_distance` except that this function keeps backpointers
     during the search.  This allows us to return the opcodes (i.e. the specific
-    edits that were used to change from one string to another.  This funtion
-    contrusts the full 2d array (actually it contructs three of them... one
-    for distances, one for matches, and one for backpointers."""
+    edits that were used to change from one string to another).  This function
+    contructs the full 2d array (actually it contructs three of them: one
+    for distances, one for matches, and one for backpointers)."""
     matches = 0
     # Create a 2d distance array
     m = len(seq1)

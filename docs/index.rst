@@ -1,25 +1,32 @@
-.. edit-distance documentation master file, created by
-   sphinx-quickstart on Mon Jan  2 03:04:49 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to edit-distance's documentation!
+edit-distance's documentation
 =========================================
-
-Contents:
 
 .. toctree::
    :maxdepth: 2
 
-Doc
-___
+.. py:module:: edit_distance
 
-.. automodule:: edit_distance
-   :members:
-   
-.. autoclass:: edit_distance.SequenceMatcher
-   :members:
+It is suggested to use either the function :py:func:`edit_distance` or the :py:class:`SequenceMatcher` class.
 
+Functions
+_________
+.. autofunction:: edit_distance
+.. autofunction:: edit_distance_backpointer
+
+SequenceMatcher class
+_____________________
+.. autoclass:: SequenceMatcher
+   :members:
+   :special-members:
+
+Match functions
+_______________
+These functions can be used to toggle whether we're minimizing edits
+or maximizing matches.
+
+.. autofunction:: lowest_cost_action
+.. autofunction:: highest_match_action
+ 
 Indices and tables
 ==================
 
