@@ -1,3 +1,6 @@
+"""
+Unit tests for edit_distanace.
+"""
 from __future__ import division
 
 import unittest
@@ -95,6 +98,7 @@ class TestEditDistance(unittest.TestCase):
         self.assertTrue(sm.distance() == 2)
 
     def test_unsupported(self):
+        """Test if calling unimplemented methods actually generates an error."""
         a = ['a', 'b']
         b = ['a', 'b', 'd', 'c']
         sm = SequenceMatcher(a=a, b=b)

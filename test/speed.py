@@ -1,3 +1,4 @@
+#pylint: skip-file
 
 # TODO - Turn this into something that runs with unit tests or something?
 
