@@ -50,8 +50,8 @@ pip uninstall edit_distance
 API usage
 ---------
 
-To see examples of usage, view the difflib documentation:
-http://docs.python.org/2/library/difflib.html
+To see examples of usage, view the [difflib documentation](http://docs.python.org/2/library/difflib.html).
+Additional API-level documentation is available on [ReadTheDocs](http://edit-distance.readthedocs.io/en/latest/)
 
 This requires Python 2.7+ since it uses argparse for the command line 
 interface.  The rest of the code should be OK with earlier versions of Python
@@ -92,4 +92,4 @@ sm = edit_distance.SequenceMatcher(a=ref, b=hyp,
 Notes
 -----
 
- * This doesn't implement the 'junk' matching features in difflib.
+This doesn't implement the 'junk' matching features in difflib.
