@@ -1,20 +1,19 @@
 language: python
 python:
-- '2.7'
-- '3.2'
-- '3.3'
-- '3.4'
-- '3.5'
-- '3.6'
-- 'nightly'
+  - '2.7'
+  - '3.2'
+  - '3.3'
+  - '3.4'
+  - '3.5'
+  - '3.6'
+  - 'nightly'
 install:
-- pip install coverage==3.7.1 codecov
-- pip install coveralls
+  - pip install coverage==3.7.1 codecov
 script:
-- python setup.py test
-- python -m coverage run --source edit_distance setup.py test
+  - python setup.py test
+  - python -m coverage run --source edit_distance setup.py test
 after_success:
-- coveralls
+  - codecov
 deploy:
   provider: pypi
   user: benlambert
