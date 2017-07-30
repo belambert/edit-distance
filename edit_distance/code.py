@@ -80,7 +80,7 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost):
     return best_action
 
 
-class SequenceMatcher:
+class SequenceMatcher(object):
     """Similar to the :py:mod:`difflib` :py:class:`~difflib.SequenceMatcher`, but uses Levenshtein/edit
     distance.
     """
@@ -223,7 +223,7 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action, test=operator.
     for i in range(1, n + 1):
         v0[i] = i
     for i in range(1, m + 1):
-        v1[0] = i + 1
+        v1[0] = i
         for j in range(1, n + 1):
             cost = 0 if test(seq1[i - 1], seq2[j - 1]) else 1
             # The costs
