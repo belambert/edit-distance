@@ -1,6 +1,5 @@
 edit_distance
 ============
-
 [![Build Status](https://travis-ci.org/belambert/edit-distance.svg?branch=master)](https://travis-ci.org/belambert/edit-distance)
 [![PyPI version](https://badge.fury.io/py/Edit_Distance.svg)](https://badge.fury.io/py/Edit_Distance)
 [![Coverage Status](https://coveralls.io/repos/github/belambert/edit-distance/badge.svg?branch=master)](https://coveralls.io/github/belambert/edit-distance?branch=master)
@@ -25,10 +24,8 @@ matches that 'look right' to people."
 If you find this library useful or have any suggestions, please send me a
 message.
 
-
 Installing & uninstalling
 -------------------------
-
 The easiest way to install is using pip:
 ```bash
 pip install edit_distance
@@ -48,7 +45,6 @@ pip uninstall edit_distance
 
 API usage
 ---------
-
 To see examples of usage, view the [difflib documentation](http://docs.python.org/2/library/difflib.html).
 Additional API-level documentation is available on [ReadTheDocs](http://edit-distance.readthedocs.io/en/latest/)
 
@@ -68,7 +64,6 @@ sm.get_matching_blocks()
 
 Differences from difflib
 ------------------------
-
 In addition to the `SequenceMatcher` methods, `distance()` and `matches()` methods 
 are provided which compute the edit distance and the number of matches.
 ```python
@@ -90,5 +85,12 @@ sm = edit_distance.SequenceMatcher(a=ref, b=hyp,
 
 Notes
 -----
-
 This doesn't implement the 'junk' matching features in difflib.
+
+Contributing and code of conduct
+--------------------------------
+For contributions, it's best to Github issues and pull requests. Proper
+testing and documentation suggested.
+
+Code of conduct is expected to be reasonable, especially as specified by
+the [Contributor Covenant][http://contributor-covenant.org/version/1/4/]
