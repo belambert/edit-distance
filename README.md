@@ -93,4 +93,4 @@ For contributions, it's best to Github issues and pull requests. Proper
 testing and documentation suggested.
 
 Code of conduct is expected to be reasonable, especially as specified by
-the [Contributor Covenant][http://contributor-covenant.org/version/1/4/]
+the [Contributor Covenant](http://contributor-covenant.org/version/1/4/)
