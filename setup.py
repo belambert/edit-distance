@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='edit_distance',
-    version='1.0.1',
+    version='1.0.2.dev0',
     author='Ben Lambert',
     author_email='ben@benjaminlambert.com',
     packages=['edit_distance'],
@@ -12,14 +12,13 @@ setup(
     keywords=['edit', 'distance', 'editdistance', 'levenshtein'],
     test_suite='test.test.TestEditDistance',
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Programming Language :: Python",
-        "Topic :: Scientific/Engineering",
-        "Topic :: Software Development",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Text Processing",
         "Topic :: Utilities",
-        "License :: OSI Approved :: BSD License"
+        "License :: OSI Approved :: Apache Software License"
     ],
     entry_points={
         'console_scripts': [
