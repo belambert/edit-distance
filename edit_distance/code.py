@@ -21,6 +21,11 @@ Code for computing edit distances.
 import sys
 import operator
 
+INSERT = 'insert'
+DELETE = 'delete'
+EQUAL = 'equal'
+REPLACE = 'replace'
+
 # Cost is basically: was there a match or not.
 # The other numbers are cumulative costs and matches.
 
@@ -45,16 +50,16 @@ def lowest_cost_action(ic, dc, sc, im, dm, sm, cost):
     best_match_count = -1
     min_cost = min(ic, dc, sc)
     if min_cost == sc and cost == 0:
-        best_action = 'equal'
+        best_action = EQUAL
         best_match_count = sm
     elif min_cost == sc and cost == 1:
-        best_action = 'replace'
+        best_action = REPLACE
         best_match_count = sm
     elif min_cost == ic and im > best_match_count:
-        best_action = 'insert'
+        best_action = INSERT
         best_match_count = im
     elif min_cost == dc and dm > best_match_count:
-        best_action = 'delete'
+        best_action = DELETE
         best_match_count = dm
     return best_action
 
@@ -81,16 +86,16 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost):
     lowest_cost = float("inf")
     max_match = max(im, dm, sm)
     if max_match == sm and cost == 0:
-        best_action = 'equal'
+        best_action = EQUAL
         lowest_cost = sm
     elif max_match == sm and cost == 1:
-        best_action = 'replace'
+        best_action = REPLACE
         lowest_cost = sm
     elif max_match == im and ic < lowest_cost:
-        best_action = 'insert'
+        best_action = INSERT
         lowest_cost = ic
     elif max_match == dm and dc < lowest_cost:
-        best_action = 'delete'
+        best_action = DELETE
         lowest_cost = dc
     return best_action
 
@@ -150,7 +155,7 @@ class SequenceMatcher(object):
         equal and returns them in a somewhat different format
         (i.e. ``(i, j, n)`` )."""
         opcodes = self.get_opcodes()
-        match_opcodes = filter(lambda x: x[0] == 'equal', opcodes)
+        match_opcodes = filter(lambda x: x[0] == EQUAL, opcodes)
         return map(lambda opcode: [opcode[1], opcode[3], opcode[2] - opcode[1]],
                    match_opcodes)
 
@@ -253,13 +258,13 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action, test=operator.
             action = action_function(ins_cost, del_cost, sub_cost, ins_match,
                                      del_match, sub_match, cost)
 
-            if action in ['equal', 'replace']:
+            if action in [EQUAL, REPLACE]:
                 v1[j] = sub_cost
                 m1[j] = sub_match
-            elif action == 'insert':
+            elif action == INSERT:
                 v1[j] = ins_cost
                 m1[j] = ins_match
-            elif action == 'delete':
+            elif action == DELETE:
                 v1[j] = del_cost
                 m1[j] = del_match
             else:
@@ -291,12 +296,12 @@ def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action, te
     # dropping all characters
     for i in range(1, m + 1):
         d[i][0] = i
-        bp[i][0] = ['delete', i - 1, i, 0, 0]
+        bp[i][0] = [DELETE, i - 1, i, 0, 0]
     # target prefixes can be reached from empty source prefix by inserting
     # every characters
     for j in range(1, n + 1):
         d[0][j] = j
-        bp[0][j] = ['insert', 0, 0, j - 1, j]
+        bp[0][j] = [INSERT, 0, 0, j - 1, j]
     # compute the edit distance...
     for i in range(1, m + 1):
         for j in range(1, n + 1):
@@ -314,22 +319,22 @@ def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action, te
 
             action = action_function(ins_cost, del_cost, sub_cost, ins_match,
                                      del_match, sub_match, cost)
-            if action == 'equal':
+            if action == EQUAL:
                 d[i][j] = sub_cost
                 matches[i][j] = sub_match
-                bp[i][j] = ['equal', i - 1, i, j - 1, j]
-            elif action == 'replace':
+                bp[i][j] = [EQUAL, i - 1, i, j - 1, j]
+            elif action == REPLACE:
                 d[i][j] = sub_cost
                 matches[i][j] = sub_match
-                bp[i][j] = ['replace', i - 1, i, j - 1, j]
-            elif action == 'insert':
+                bp[i][j] = [REPLACE, i - 1, i, j - 1, j]
+            elif action == INSERT:
                 d[i][j] = ins_cost
                 matches[i][j] = ins_match
-                bp[i][j] = ['insert', i - 1, i - 1, j - 1, j]
-            elif action == 'delete':
+                bp[i][j] = [INSERT, i - 1, i - 1, j - 1, j]
+            elif action == DELETE:
                 d[i][j] = del_cost
                 matches[i][j] = del_match
-                bp[i][j] = ['delete', i - 1, i, j - 1, j - 1]
+                bp[i][j] = [DELETE, i - 1, i, j - 1, j - 1]
             else:
                 raise Exception('Invalid dynamic programming action returned!')
 
@@ -345,12 +350,12 @@ def get_opcodes_from_bp_table(bp):
     while x != 0 or y != 0:
         this_bp = bp[x][y]
         opcodes.append(this_bp)
-        if this_bp[0] == 'equal' or this_bp[0] == 'replace':
+        if this_bp[0] == EQUAL or this_bp[0] == REPLACE:
             x = x - 1
             y = y - 1
-        elif this_bp[0] == 'insert':
+        elif this_bp[0] == INSERT:
             y = y - 1
-        elif this_bp[0] == 'delete':
+        elif this_bp[0] == DELETE:
             x = x - 1
     opcodes.reverse()
     return opcodes
