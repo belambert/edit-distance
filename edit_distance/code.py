@@ -270,9 +270,9 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action, test=operator.
             else:
                 raise Exception('Invalid dynamic programming option returned!')
                 # Copy the columns over
-        for i in range(0, n + 1):
-            v0[i] = v1[i]
-            m0[i] = m1[i]
+        for k in range(0, n + 1):
+            v0[k] = v1[k]
+            m0[k] = m1[k]
     return v1[n], m1[n]
 
 
@@ -280,83 +280,87 @@ def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action, te
     """Similar to :py:func:`~edit_distance.edit_distance` except that this function keeps backpointers
     during the search.  This allows us to return the opcodes (i.e. the specific
     edits that were used to change from one string to another).  This function
-    contructs the full 2d array (actually it contructs three of them: one
-    for distances, one for matches, and one for backpointers)."""
-    matches = 0
-    # Create a 2d distance array
+    contructs the full 2d array for the backpointers only."""
     m = len(seq1)
     n = len(seq2)
-    # distances array:
-    d = [[0 for x in range(n + 1)] for y in range(m + 1)]
     # backpointer array:
     bp = [[None for x in range(n + 1)] for y in range(m + 1)]
-    # matches array:
-    matches = [[0 for x in range(n + 1)] for y in range(m + 1)]
-    # source prefixes can be transformed into empty string by
-    # dropping all characters
+
+    # Two columns of the distance and match arrays
+    d0 = [0] * (n + 1)     # The two 'distance' columns
+    d1 = [0] * (n + 1)
+    m0 = [0] * (n + 1)     # The two 'match' columns
+    m1 = [0] * (n + 1)
+
+    # Fill in the first column
+    for i in range(1, n + 1):
+        d0[i] = i
+        bp[0][i] = INSERT
+
     for i in range(1, m + 1):
-        d[i][0] = i
-        bp[i][0] = [DELETE, i - 1, i, 0, 0]
-    # target prefixes can be reached from empty source prefix by inserting
-    # every characters
-    for j in range(1, n + 1):
-        d[0][j] = j
-        bp[0][j] = [INSERT, 0, 0, j - 1, j]
-    # compute the edit distance...
-    for i in range(1, m + 1):
+        d1[0] = i
+        bp[i][0] = DELETE
+
         for j in range(1, n + 1):
 
             cost = 0 if test(seq1[i - 1], seq2[j - 1]) else 1
             # The costs of each action...
-            ins_cost = d[i][j - 1] + 1       # insertion
-            del_cost = d[i - 1][j] + 1       # deletion
-            sub_cost = d[i - 1][j - 1] + cost  # substitution/match
+            ins_cost = d1[j - 1] + 1       # insertion
+            del_cost = d0[j] + 1           # deletion
+            sub_cost = d0[j - 1] + cost    # substitution/match
 
             # The match scores of each action
-            ins_match = matches[i][j - 1]
-            del_match = matches[i - 1][j]
-            sub_match = matches[i - 1][j - 1] + int(not cost)
+            ins_match = m1[j - 1]
+            del_match = m0[j]
+            sub_match = m0[j - 1] + int(not cost)
 
             action = action_function(ins_cost, del_cost, sub_cost, ins_match,
                                      del_match, sub_match, cost)
             if action == EQUAL:
-                d[i][j] = sub_cost
-                matches[i][j] = sub_match
-                bp[i][j] = [EQUAL, i - 1, i, j - 1, j]
+                d1[j] = sub_cost
+                m1[j] = sub_match
+                bp[i][j] = EQUAL
             elif action == REPLACE:
-                d[i][j] = sub_cost
-                matches[i][j] = sub_match
-                bp[i][j] = [REPLACE, i - 1, i, j - 1, j]
+                d1[j] = sub_cost
+                m1[j] = sub_match
+                bp[i][j] = REPLACE
             elif action == INSERT:
-                d[i][j] = ins_cost
-                matches[i][j] = ins_match
-                bp[i][j] = [INSERT, i - 1, i - 1, j - 1, j]
+                d1[j] = ins_cost
+                m1[j] = ins_match
+                bp[i][j] = INSERT
             elif action == DELETE:
-                d[i][j] = del_cost
-                matches[i][j] = del_match
-                bp[i][j] = [DELETE, i - 1, i, j - 1, j - 1]
+                d1[j] = del_cost
+                m1[j] = del_match
+                bp[i][j] = DELETE
             else:
                 raise Exception('Invalid dynamic programming action returned!')
-
+        # copy over the columns
+        for k in range(0, n + 1):
+            d0[k] = d1[k]
+            m0[k] = m1[k]
     opcodes = get_opcodes_from_bp_table(bp)
-    return d[m][n], matches[m][n], opcodes
+    return d1[n], m1[n], opcodes
 
 
 def get_opcodes_from_bp_table(bp):
-    """Given a 2d list structure, collect the opcodes from the best path."""
+    """Given a 2d list structure, create opcodes from the best path."""
     x = len(bp) - 1
     y = len(bp[0]) - 1
     opcodes = []
     while x != 0 or y != 0:
         this_bp = bp[x][y]
-        opcodes.append(this_bp)
-        if this_bp[0] == EQUAL or this_bp[0] == REPLACE:
+        if this_bp == EQUAL or this_bp == REPLACE:
+            opcodes.append([this_bp, max(x-1,0), x, max(y-1,0), y])
             x = x - 1
             y = y - 1
-        elif this_bp[0] == INSERT:
+        elif this_bp == INSERT:
+            opcodes.append([INSERT, max(x-1, 0), max(x-1,0), max(y-1, 0), y])
             y = y - 1
-        elif this_bp[0] == DELETE:
+        elif this_bp == DELETE:
+            opcodes.append([DELETE, max(x-1, 0), x, max(y-1, 0), max(y-1, 0)])
             x = x - 1
+        else:
+            raise Exception('Invalid dynamic programming action in BP table!')
     opcodes.reverse()
     return opcodes
 
