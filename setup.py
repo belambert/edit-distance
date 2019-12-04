@@ -10,7 +10,7 @@ setup(
     description='Computing edit distance on arbitrary Python sequences.',
     url='https://github.com/belambert/editdistance',
     keywords=['edit', 'distance', 'editdistance', 'levenshtein'],
-    test_suite='test.test.TestEditDistance',
+    test_suite='test',
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     classifiers=[
