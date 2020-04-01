@@ -1,6 +1,6 @@
 # -*- mode: Python;-*-
 
-# Copyright 2013-2018 Ben Lambert
+# Copyright 2013-2020 Ben Lambert
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -354,7 +354,7 @@ def get_opcodes_from_bp_table(bp):
             x = x - 1
             y = y - 1
         elif this_bp == INSERT:
-            opcodes.append([INSERT, max(x-1, 0), max(x-1,0), max(y-1, 0), y])
+            opcodes.append([INSERT, x, x, max(y-1, 0), y])
             y = y - 1
         elif this_bp == DELETE:
             opcodes.append([DELETE, max(x-1, 0), x, max(y-1, 0), max(y-1, 0)])

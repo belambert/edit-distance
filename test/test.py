@@ -150,3 +150,8 @@ class TestEditDistance(unittest.TestCase):
         sm = SequenceMatcher(a=a, b=b)
         self.assertEqual(sm.distance(), 16)
         self.assertEqual(sm.get_opcodes(), target_opcodes)
+
+    def test_issue13(self):
+        sm = SequenceMatcher(a='abc', b='abdc')
+        self.assertEqual([['equal', 0, 1, 0, 1], ['equal', 1, 2, 1, 2], ['insert', 2, 2, 2, 3], ['equal', 2, 3, 3, 4]],
+                         sm.get_opcodes())
