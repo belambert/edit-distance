@@ -1,12 +1,13 @@
 language: python
+dist: bionic
 python:
   - '2.7'
-  - '3.4'
   - '3.5'
   - '3.6'
   - '3.7'
+  - '3.8'
 install:
-  - pip install coverage==3.7.1 codecov
+  - pip install coverage codecov
 script:
   - python setup.py test
   - python -m coverage run --source edit_distance setup.py test
@@ -19,4 +20,4 @@ deploy:
     secure: aFIMSyH0S0VFHqky6YxbAhyHAsx2gUODb2D871ktHRJFnSJ+51ZAtsa15D3qMqQXfrTAhN73vSyh/bu55/w0XXEJWiBBubsC0phRVHwQAno5w3OcUPL/P7iPidlZ7rD/ksqv3K/wluF1DRXLYy24zQsyCIJ6eENL9uQTDzjAT7wUXoP3yILzHSQHOWjxXIPSS20m/eu7EBT/FPLY8BcOKGAwHmxPpTEjmat1Vue5lzoc3IYMu+atxyo5gz5roKI0J5w+As2hOrk6oYhd0M4gAMyftq4sR0PHOpZSrprGhvw6nGizuOBY/RB3pLVAGWoD18AM9bTYpYlun1rUkFzSJReZBLQJvY/A2NC+KsGZ8250zTUGqUu9kGYY/L5UiY/j6lBH/P64YbnRbX/JZXZGdalNt2k+/twZSpxYKlxUqeXe9hezy6jlniaVLUeR0JspgejRexFibZt6MAHQRHQGAIee88GCH3lg5eZvzjjeW12e8osC5zvq7yaAJ/74dry08S0WCoTwAncWwQkBOqyCpHteHvx1C6aCYUFSCiT9udz+NVpzaLK76OhKQphQFCf2WyZngfQL3jb6TAyv4ByfzRHgUUL2GV/0TtpN9yAHcLc9gbIN7dI6RY3GvlRccK9Ze+64KziPe0BZCRs7jwqvu4SEoP03MCN7kA3TG1ejKO8=
   on:
     tags: true
-    python: '3.7'
+    python: '3.8'
