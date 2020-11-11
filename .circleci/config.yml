@@ -1,33 +1,38 @@
 version: 2.1
 
+# TODO - need to add flake8, mypy, and deployment
+# TODO - upload coverage to codecov?
+
 orbs:
   python: circleci/python@1.2.1
-          
+
+jobs:
+  reporting:
+    executor: python/default
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - run:
+          command: |
+            python -m coverage run --source edit_distance setup.py test
+            coverage report
+            coverage html
+          name: test coverage
+      - store_artifacts:
+          path: htmlcov
+      - run:
+          command: python -m xmlrunner discover -o test-results
+          name: test reporting
+      - store_test_results:
+          path: test-results
+
+
 workflows:
   main:
     jobs:
-      - python/test: &test-template
-          pypi-cache: false
-          pkg-manager: pip-dist
-          version: "3.9"
-          name: "python3.9"
       - python/test:
-          <<: *test-template
-          version: "3.8"
-          name: "python3.8"
-      - python/test:
-          <<: *test-template
-          version: "3.7"
-          name: "python3.7"
-      - python/test:
-          <<: *test-template
-          version: "3.6"
-          name: "python3.6"
-      - python/test:
-          <<: *test-template
-          version: "3.5"
-          name: "python3.5"
-      - python/test:
-          <<: *test-template
-          version: "2.7"
-          name: "python2.7"
+          matrix:
+            parameters:
+              version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9"]
+      - reporting
