@@ -1,6 +1,6 @@
 edit_distance
-============
-[![Build Status](https://travis-ci.org/belambert/edit-distance.svg?branch=master)](https://travis-ci.org/belambert/edit-distance)
+=============
+[![CircleCI](https://circleci.com/gh/belambert/edit-distance.svg?style=shield)](https://circleci.com/gh/belambert/edit-distance)
 [![PyPI version](https://badge.fury.io/py/Edit_Distance.svg)](https://badge.fury.io/py/Edit_Distance)
 [![codecov](https://codecov.io/gh/belambert/edit-distance/branch/master/graph/badge.svg)](https://codecov.io/gh/belambert/edit-distance)
 
@@ -27,21 +27,21 @@ message.
 Installing & uninstalling
 -------------------------
 The easiest way to install is using pip:
-```bash
-pip install edit_distance
-```
+
+    pip install edit_distance
+
 
 Alternatively you can clone this git repo and install using distutils:
-```bash
-git clone git@github.com:belambert/edit_distance.git
-cd edit_distance
-python setup.py install
-```
+
+    git clone git@github.com:belambert/edit_distance.git
+    cd edit_distance
+    python setup.py install
+
 
 To uninstall with pip:
-```bash
-pip uninstall edit_distance
-```
+
+    pip uninstall edit_distance
+
 
 API usage
 ---------
@@ -90,7 +90,7 @@ This doesn't implement the 'junk' matching features in difflib.
 Contributing and code of conduct
 --------------------------------
 For contributions, it's best to Github issues and pull requests. Proper
-testing and documentation suggested.
+testing and documentation required.
 
 Code of conduct is expected to be reasonable, especially as specified by
 the [Contributor Covenant](http://contributor-covenant.org/version/1/4/)
