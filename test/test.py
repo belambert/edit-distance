@@ -1,4 +1,4 @@
-# Copyright 2013-2018 Ben Lambert
+# Copyright 2013-2020 Ben Lambert
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ class TestEditDistance(unittest.TestCase):
         b = ['hi', "i'm", 'my', "name's", 'sandy']
         self.assertEqual(edit_distance(a, b, action_function=highest_match_action), (4, 2))
         bp_expected_result = (4, 2, [['equal', 0, 1, 0, 1],
-                                     ['insert', 0, 0, 1, 2],
+                                     ['insert', 1, 1, 1, 2],
                                      ['equal', 1, 2, 2, 3],
                                      ['delete', 2, 3, 2, 2],
                                      ['replace', 3, 4, 3, 4],
@@ -99,7 +99,7 @@ class TestEditDistance(unittest.TestCase):
         a = ['a', 'b']
         b = ['a', 'b', 'd', 'c']
         sm = SequenceMatcher(a=a, b=b)
-        opcodes = [['equal', 0, 1, 0, 1], ['equal', 1, 2, 1, 2], ['insert', 1, 1, 2, 3], ['insert', 1, 1, 3, 4]]
+        opcodes = [['equal', 0, 1, 0, 1], ['equal', 1, 2, 1, 2], ['insert', 2, 2, 2, 3], ['insert', 2, 2, 3, 4]]
         self.assertEqual(sm.distance(), 2)
         self.assertEqual(sm.ratio(), 2 / 3)
         self.assertEqual(sm.quick_ratio(), 2 / 3)
@@ -138,7 +138,7 @@ class TestEditDistance(unittest.TestCase):
         b = ['continuous', ':=', '(', 'sanction', '^']
         sm = SequenceMatcher(a=a, b=b)
         self.assertEqual(sm.distance(),  4)
-        target_opcodes = [['delete', 0, 1, 0, 0], ['equal', 1, 2, 0, 1], ['delete', 2, 3, 0, 0], ['equal', 3, 4, 1, 2], ['equal', 4, 5, 2, 3], ['insert', 4, 4, 3, 4], ['insert', 4, 4, 4, 5]]
+        target_opcodes = [['delete', 0, 1, 0, 0], ['equal', 1, 2, 0, 1], ['delete', 2, 3, 0, 0], ['equal', 3, 4, 1, 2], ['equal', 4, 5, 2, 3], ['insert', 5, 5, 3, 4], ['insert', 5, 5, 4, 5]]
         self.assertEqual(sm.get_opcodes(), target_opcodes)
 
     def test_issue4(self):
@@ -146,7 +146,7 @@ class TestEditDistance(unittest.TestCase):
         https://github.com/belambert/edit-distance/issues/4 """
         a = ['that', 'continuous', 'sanction', ':=', '(', 'flee', 'U', 'complain', ')', 'E', 'attendance', 'eye', '^', 'flowery', 'revelation', '^', 'ridiculous', 'destination', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>']
         b = ['continuous', ':=', '(', 'sanction', '^', 'flee', '^', 'attendance', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>', '<EOS>']
-        target_opcodes = [['delete', 0, 1, 0, 0], ['equal', 1, 2, 0, 1], ['delete', 2, 3, 0, 0], ['equal', 3, 4, 1, 2], ['equal', 4, 5, 2, 3], ['insert', 4, 4, 3, 4], ['insert', 4, 4, 4, 5], ['equal', 5, 6, 5, 6], ['replace', 6, 7, 6, 7], ['replace', 7, 8, 7, 8], ['replace', 8, 9, 8, 9], ['replace', 9, 10, 9, 10], ['replace', 10, 11, 10, 11], ['replace', 11, 12, 11, 12], ['replace', 12, 13, 12, 13], ['replace', 13, 14, 13, 14], ['replace', 14, 15, 14, 15], ['replace', 15, 16, 15, 16], ['replace', 16, 17, 16, 17], ['replace', 17, 18, 17, 18], ['equal', 18, 19, 18, 19], ['equal', 19, 20, 19, 20], ['equal', 20, 21, 20, 21], ['equal', 21, 22, 21, 22], ['equal', 22, 23, 22, 23], ['equal', 23, 24, 23, 24], ['equal', 24, 25, 24, 25], ['equal', 25, 26, 25, 26], ['equal', 26, 27, 26, 27], ['equal', 27, 28, 27, 28], ['equal', 28, 29, 28, 29]]
+        target_opcodes = [['delete', 0, 1, 0, 0], ['equal', 1, 2, 0, 1], ['delete', 2, 3, 0, 0], ['equal', 3, 4, 1, 2], ['equal', 4, 5, 2, 3], ['insert', 5, 5, 3, 4], ['insert', 5, 5, 4, 5], ['equal', 5, 6, 5, 6], ['replace', 6, 7, 6, 7], ['replace', 7, 8, 7, 8], ['replace', 8, 9, 8, 9], ['replace', 9, 10, 9, 10], ['replace', 10, 11, 10, 11], ['replace', 11, 12, 11, 12], ['replace', 12, 13, 12, 13], ['replace', 13, 14, 13, 14], ['replace', 14, 15, 14, 15], ['replace', 15, 16, 15, 16], ['replace', 16, 17, 16, 17], ['replace', 17, 18, 17, 18], ['equal', 18, 19, 18, 19], ['equal', 19, 20, 19, 20], ['equal', 20, 21, 20, 21], ['equal', 21, 22, 21, 22], ['equal', 22, 23, 22, 23], ['equal', 23, 24, 23, 24], ['equal', 24, 25, 24, 25], ['equal', 25, 26, 25, 26], ['equal', 26, 27, 26, 27], ['equal', 27, 28, 27, 28], ['equal', 28, 29, 28, 29]]
         sm = SequenceMatcher(a=a, b=b)
         self.assertEqual(sm.distance(), 16)
         self.assertEqual(sm.get_opcodes(), target_opcodes)
