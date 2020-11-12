@@ -1,7 +1,6 @@
 version: 2.1
 
-# TODO - need to add flake8, mypy, and deployment
-# TODO - upload coverage to codecov?
+# TODO - need to add mypy, deployment, and upload coverage to codecov?
 
 orbs:
   python: circleci/python@1.2.1
@@ -14,24 +13,26 @@ jobs:
       - python/install-packages:
           pkg-manager: pip
       - run:
+          command: python -m xmlrunner discover -o test-results
+          name: test reporting
+      - store_test_results:
+          path: test-results
+      - run:
+          command: flake8 edit_distance.py test
+      - run:
           command: |
-            python -m coverage run --source edit_distance setup.py test
+            python -m coverage run setup.py test
             coverage report
             coverage html
           name: test coverage
       - store_artifacts:
           path: htmlcov
-      - run:
-          command: python -m xmlrunner discover -o test-results
-          name: test reporting
-      - store_test_results:
-          path: test-results
 
 workflows:
   main:
     jobs:
+      - reporting
       - python/test:
           matrix:
             parameters:
               version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9"]
-      - reporting

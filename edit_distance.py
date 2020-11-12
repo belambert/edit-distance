@@ -26,6 +26,7 @@ DELETE = 'delete'
 EQUAL = 'equal'
 REPLACE = 'replace'
 
+
 # Cost is basically: was there a match or not.
 # The other numbers are cumulative costs and matches.
 
@@ -63,6 +64,7 @@ def lowest_cost_action(ic, dc, sc, im, dm, sm, cost):
         best_match_count = dm
     return best_action
 
+
 def highest_match_action(ic, dc, sc, im, dm, sm, cost):
     """Given the following values, choose the action (insertion, deletion, or
     substitution), that results in the highest match score (ties are broken
@@ -81,7 +83,6 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost):
 
     * sm - substitution match (score)
     """
-    # pylint: disable=unused-argument
     best_action = None
     lowest_cost = float("inf")
     max_match = max(im, dm, sm)
@@ -101,15 +102,17 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost):
 
 
 class SequenceMatcher(object):
-    """Similar to the :py:mod:`difflib` :py:class:`~difflib.SequenceMatcher`, but uses Levenshtein/edit
-    distance.
+    """
+    Similar to the :py:mod:`difflib` :py:class:`~difflib.SequenceMatcher`, but
+    uses Levenshtein/edit distance.
     """
 
     def __init__(self, a=None, b=None, test=operator.eq,
                  action_function=lowest_cost_action):
-        """Initialize the object with sequences a and b.  Optionally, one can
-        specify a test function that is used to compare sequence elements.
-        This defaults to the built in ``eq`` operator (i.e. :py:func:`operator.eq`).
+        """
+        Initialize the object with sequences a and b.  Optionally, one can
+        specify a test function that is used to compare sequence elements. This
+        defaults to the built in ``eq`` operator (i.e. :py:func:`operator.eq`).
         """
         if a is None:
             a = []
@@ -156,16 +159,20 @@ class SequenceMatcher(object):
         (i.e. ``(i, j, n)`` )."""
         opcodes = self.get_opcodes()
         match_opcodes = filter(lambda x: x[0] == EQUAL, opcodes)
-        return map(lambda opcode: [opcode[1], opcode[3], opcode[2] - opcode[1]],
+        return map(lambda opcode: [opcode[1],
+                                   opcode[3],
+                                   opcode[2] - opcode[1]],
                    match_opcodes)
 
     def get_opcodes(self):
         """Returns a list of opcodes.  Opcodes are the same as defined by
         :py:mod:`difflib`."""
         if not self.opcodes:
-            d, m, opcodes = edit_distance_backpointer(self.seq1, self.seq2,
-                                                      action_function=self.action_function,
-                                                      test=self.test)
+            d, m, opcodes = \
+                edit_distance_backpointer(self.seq1,
+                                          self.seq2,
+                                          action_function=self.action_function,
+                                          test=self.test)
             if self.dist:
                 assert d == self.dist
             if self._matches:
@@ -221,11 +228,15 @@ class SequenceMatcher(object):
         return self._matches
 
 
-def edit_distance(seq1, seq2, action_function=lowest_cost_action, test=operator.eq):
-    """Computes the edit distance between the two given sequences.
-    This uses the relatively fast method that only constructs
-    two columns of the 2d array for edits.  This function actually uses four columns
-    because we track the number of matches too.
+def edit_distance(seq1,
+                  seq2,
+                  action_function=lowest_cost_action,
+                  test=operator.eq):
+    """
+    Computes the edit distance between the two given sequences.  This uses the
+    relatively fast method that only constructs two columns of the 2d array
+    for edits.  This function actually uses four columns because we track the
+    number of matches too.
     """
     m = len(seq1)
     n = len(seq2)
@@ -276,11 +287,17 @@ def edit_distance(seq1, seq2, action_function=lowest_cost_action, test=operator.
     return v1[n], m1[n]
 
 
-def edit_distance_backpointer(seq1, seq2, action_function=lowest_cost_action, test=operator.eq):
-    """Similar to :py:func:`~edit_distance.edit_distance` except that this function keeps backpointers
-    during the search.  This allows us to return the opcodes (i.e. the specific
-    edits that were used to change from one string to another).  This function
-    contructs the full 2d array for the backpointers only."""
+def edit_distance_backpointer(seq1,
+                              seq2,
+                              action_function=lowest_cost_action,
+                              test=operator.eq):
+    """
+    Similar to :py:func:`~edit_distance.edit_distance` except that this
+    function keeps backpointers during the search.  This allows us to return
+    the opcodes (i.e. the specific edits that were used to change from one
+    string to another).  This function contructs the full 2d array for the
+    backpointers only.
+    """
     m = len(seq1)
     n = len(seq2)
     # backpointer array:
@@ -350,7 +367,7 @@ def get_opcodes_from_bp_table(bp):
     while x != 0 or y != 0:
         this_bp = bp[x][y]
         if this_bp == EQUAL or this_bp == REPLACE:
-            opcodes.append([this_bp, max(x-1,0), x, max(y-1,0), y])
+            opcodes.append([this_bp, max(x-1, 0), x, max(y-1, 0), y])
             x = x - 1
             y = y - 1
         elif this_bp == INSERT:
@@ -379,9 +396,11 @@ def main():
         for line1, line2 in zip(f1, f2):
             print("Line 1: {}".format(line1.strip()))
             print("Line 2: {}".format(line2.strip()))
-            dist, _, _ = edit_distance_backpointer(line1.split(), line2.split())
+            dist, _, _ = edit_distance_backpointer(line1.split(),
+                                                   line2.split())
             print('Distance: {}'.format(dist))
             print('=' * 80)
+
 
 if __name__ == "__main__":
     main()
