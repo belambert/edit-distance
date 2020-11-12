@@ -31,6 +31,21 @@ jobs:
           name: test coverage
       - store_artifacts:
           path: htmlcov
+  deploy:
+    executor: python/default
+    steps:
+      - checkout
+      - run:
+          command: python setup.py verify
+      - run:
+          command: |
+            echo -e "[pypi]" >> ~/.pypirc
+            echo -e "username = levlaz" >> ~/.pypirc
+            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+      - run:
+          command: make package
+      # - run:
+      #     command: twine upload dist/*
 
 workflows:
   main:
@@ -40,3 +55,11 @@ workflows:
           matrix:
             parameters:
               version: ["3.6", "3.7", "3.8", "3.9"]
+      - deploy:
+          requires:
+            - python/test
+          # filters:
+          #   tags:
+          #     only: /v[0-9]+(\.[0-9]+)*/
+          #   branches:
+          #     ignore: /.*/
