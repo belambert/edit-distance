@@ -44,6 +44,8 @@ jobs:
             echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
       - run:
           command: make package
+      - run:
+          command: pip install twine
       # - run:
       #     command: twine upload dist/*
 
