@@ -88,6 +88,16 @@ Notes
 -----
 This doesn't implement the 'junk' matching features in difflib.
 
+
+Hacking
+-------
+To run unit tests:
+
+    python -m unittest
+
+To deploy...
+
+
 Contributing and code of conduct
 --------------------------------
 For contributions, it's best to Github issues and pull requests. Proper
