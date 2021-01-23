@@ -1,3 +1,5 @@
+black
 coverage
 flake8
+mypy
 unittest-xml-reporting
