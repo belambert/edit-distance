@@ -21,14 +21,15 @@ Code for computing edit distances.
 import sys
 import operator
 
-INSERT = 'insert'
-DELETE = 'delete'
-EQUAL = 'equal'
-REPLACE = 'replace'
+INSERT = "insert"
+DELETE = "delete"
+EQUAL = "equal"
+REPLACE = "replace"
 
 
 # Cost is basically: was there a match or not.
 # The other numbers are cumulative costs and matches.
+
 
 def lowest_cost_action(ic, dc, sc, im, dm, sm, cost):
     """Given the following values, choose the action (insertion, deletion,
@@ -107,8 +108,9 @@ class SequenceMatcher(object):
     uses Levenshtein/edit distance.
     """
 
-    def __init__(self, a=None, b=None, test=operator.eq,
-                 action_function=lowest_cost_action):
+    def __init__(
+        self, a=None, b=None, test=operator.eq, action_function=lowest_cost_action
+    ):
         """
         Initialize the object with sequences a and b.  Optionally, one can
         specify a test function that is used to compare sequence elements. This
@@ -159,20 +161,20 @@ class SequenceMatcher(object):
         (i.e. ``(i, j, n)`` )."""
         opcodes = self.get_opcodes()
         match_opcodes = filter(lambda x: x[0] == EQUAL, opcodes)
-        return map(lambda opcode: [opcode[1],
-                                   opcode[3],
-                                   opcode[2] - opcode[1]],
-                   match_opcodes)
+        return map(
+            lambda opcode: [opcode[1], opcode[3], opcode[2] - opcode[1]], match_opcodes
+        )
 
     def get_opcodes(self):
         """Returns a list of opcodes.  Opcodes are the same as defined by
         :py:mod:`difflib`."""
         if not self.opcodes:
-            d, m, opcodes = \
-                edit_distance_backpointer(self.seq1,
-                                          self.seq2,
-                                          action_function=self.action_function,
-                                          test=self.test)
+            d, m, opcodes = edit_distance_backpointer(
+                self.seq1,
+                self.seq2,
+                action_function=self.action_function,
+                test=self.test,
+            )
             if self.dist:
                 assert d == self.dist
             if self._matches:
@@ -201,9 +203,9 @@ class SequenceMatcher(object):
     def _compute_distance_fast(self):
         """Calls edit_distance, and asserts that if we already have values for
         matches and distance, that they match."""
-        d, m = edit_distance(self.seq1, self.seq2,
-                             action_function=self.action_function,
-                             test=self.test)
+        d, m = edit_distance(
+            self.seq1, self.seq2, action_function=self.action_function, test=self.test
+        )
         if self.dist:
             assert d == self.dist
         if self._matches:
@@ -228,10 +230,7 @@ class SequenceMatcher(object):
         return self._matches
 
 
-def edit_distance(seq1,
-                  seq2,
-                  action_function=lowest_cost_action,
-                  test=operator.eq):
+def edit_distance(seq1, seq2, action_function=lowest_cost_action, test=operator.eq):
     """
     Computes the edit distance between the two given sequences.  This uses the
     relatively fast method that only constructs two columns of the 2d array
@@ -247,9 +246,9 @@ def edit_distance(seq1,
         return n, 0
     if n == 0:
         return m, 0
-    v0 = [0] * (n + 1)     # The two 'error' columns
+    v0 = [0] * (n + 1)  # The two 'error' columns
     v1 = [0] * (n + 1)
-    m0 = [0] * (n + 1)     # The two 'match' columns
+    m0 = [0] * (n + 1)  # The two 'match' columns
     m1 = [0] * (n + 1)
     for i in range(1, n + 1):
         v0[i] = i
@@ -266,8 +265,9 @@ def edit_distance(seq1,
             del_match = m0[j]
             sub_match = m0[j - 1] + int(not cost)
 
-            action = action_function(ins_cost, del_cost, sub_cost, ins_match,
-                                     del_match, sub_match, cost)
+            action = action_function(
+                ins_cost, del_cost, sub_cost, ins_match, del_match, sub_match, cost
+            )
 
             if action in [EQUAL, REPLACE]:
                 v1[j] = sub_cost
@@ -279,7 +279,7 @@ def edit_distance(seq1,
                 v1[j] = del_cost
                 m1[j] = del_match
             else:
-                raise Exception('Invalid dynamic programming option returned!')
+                raise Exception("Invalid dynamic programming option returned!")
                 # Copy the columns over
         for k in range(0, n + 1):
             v0[k] = v1[k]
@@ -287,10 +287,9 @@ def edit_distance(seq1,
     return v1[n], m1[n]
 
 
-def edit_distance_backpointer(seq1,
-                              seq2,
-                              action_function=lowest_cost_action,
-                              test=operator.eq):
+def edit_distance_backpointer(
+    seq1, seq2, action_function=lowest_cost_action, test=operator.eq
+):
     """
     Similar to :py:func:`~edit_distance.edit_distance` except that this
     function keeps backpointers during the search.  This allows us to return
@@ -304,9 +303,9 @@ def edit_distance_backpointer(seq1,
     bp = [[None for x in range(n + 1)] for y in range(m + 1)]
 
     # Two columns of the distance and match arrays
-    d0 = [0] * (n + 1)     # The two 'distance' columns
+    d0 = [0] * (n + 1)  # The two 'distance' columns
     d1 = [0] * (n + 1)
-    m0 = [0] * (n + 1)     # The two 'match' columns
+    m0 = [0] * (n + 1)  # The two 'match' columns
     m1 = [0] * (n + 1)
 
     # Fill in the first column
@@ -322,17 +321,18 @@ def edit_distance_backpointer(seq1,
 
             cost = 0 if test(seq1[i - 1], seq2[j - 1]) else 1
             # The costs of each action...
-            ins_cost = d1[j - 1] + 1       # insertion
-            del_cost = d0[j] + 1           # deletion
-            sub_cost = d0[j - 1] + cost    # substitution/match
+            ins_cost = d1[j - 1] + 1  # insertion
+            del_cost = d0[j] + 1  # deletion
+            sub_cost = d0[j - 1] + cost  # substitution/match
 
             # The match scores of each action
             ins_match = m1[j - 1]
             del_match = m0[j]
             sub_match = m0[j - 1] + int(not cost)
 
-            action = action_function(ins_cost, del_cost, sub_cost, ins_match,
-                                     del_match, sub_match, cost)
+            action = action_function(
+                ins_cost, del_cost, sub_cost, ins_match, del_match, sub_match, cost
+            )
             if action == EQUAL:
                 d1[j] = sub_cost
                 m1[j] = sub_match
@@ -350,7 +350,7 @@ def edit_distance_backpointer(seq1,
                 m1[j] = del_match
                 bp[i][j] = DELETE
             else:
-                raise Exception('Invalid dynamic programming action returned!')
+                raise Exception("Invalid dynamic programming action returned!")
         # copy over the columns
         for k in range(0, n + 1):
             d0[k] = d1[k]
@@ -367,17 +367,17 @@ def get_opcodes_from_bp_table(bp):
     while x != 0 or y != 0:
         this_bp = bp[x][y]
         if this_bp == EQUAL or this_bp == REPLACE:
-            opcodes.append([this_bp, max(x-1, 0), x, max(y-1, 0), y])
+            opcodes.append([this_bp, max(x - 1, 0), x, max(y - 1, 0), y])
             x = x - 1
             y = y - 1
         elif this_bp == INSERT:
-            opcodes.append([INSERT, x, x, max(y-1, 0), y])
+            opcodes.append([INSERT, x, x, max(y - 1, 0), y])
             y = y - 1
         elif this_bp == DELETE:
-            opcodes.append([DELETE, max(x-1, 0), x, max(y-1, 0), max(y-1, 0)])
+            opcodes.append([DELETE, max(x - 1, 0), x, max(y - 1, 0), max(y - 1, 0)])
             x = x - 1
         else:
-            raise Exception('Invalid dynamic programming action in BP table!')
+            raise Exception("Invalid dynamic programming action in BP table!")
     opcodes.reverse()
     return opcodes
 
@@ -387,7 +387,7 @@ def main():
     of lines. Will terminate at the end of the shorter of the two files."""
 
     if len(sys.argv) != 3:
-        print('Usage: {} <file1> <file2>'.format(sys.argv[0]))
+        print("Usage: {} <file1> <file2>".format(sys.argv[0]))
         exit(-1)
     file1 = sys.argv[1]
     file2 = sys.argv[2]
@@ -396,10 +396,9 @@ def main():
         for line1, line2 in zip(f1, f2):
             print("Line 1: {}".format(line1.strip()))
             print("Line 2: {}".format(line2.strip()))
-            dist, _, _ = edit_distance_backpointer(line1.split(),
-                                                   line2.split())
-            print('Distance: {}'.format(dist))
-            print('=' * 80)
+            dist, _, _ = edit_distance_backpointer(line1.split(), line2.split())
+            print("Distance: {}".format(dist))
+            print("=" * 80)
 
 
 if __name__ == "__main__":
