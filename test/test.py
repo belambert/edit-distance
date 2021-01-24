@@ -34,7 +34,7 @@ class TestEditDistance(unittest.TestCase):
         bp_expected_result = (
             1,
             2,
-            [["insert", 0, 0, 0, 1], ["equal", 0, 1, 1, 2], ["equal", 1, 2, 2, 3]],
+            [("insert", 0, 0, 0, 1), ("equal", 0, 1, 1, 2), ("equal", 1, 2, 2, 3)],
         )
         self.assertEqual(edit_distance_backpointer(a, b), bp_expected_result)
 
@@ -47,11 +47,11 @@ class TestEditDistance(unittest.TestCase):
             3,
             2,
             [
-                ["insert", 0, 0, 0, 1],
-                ["insert", 0, 0, 1, 2],
-                ["insert", 0, 0, 2, 3],
-                ["equal", 0, 1, 3, 4],
-                ["equal", 1, 2, 4, 5],
+                ("insert", 0, 0, 0, 1),
+                ("insert", 0, 0, 1, 2),
+                ("insert", 0, 0, 2, 3),
+                ("equal", 0, 1, 3, 4),
+                ("equal", 1, 2, 4, 5),
             ],
         )
         self.assertEqual(edit_distance_backpointer(a, b), bp_expected_result)
@@ -65,11 +65,11 @@ class TestEditDistance(unittest.TestCase):
             4,
             1,
             [
-                ["equal", 0, 1, 0, 1],
-                ["replace", 1, 2, 1, 2],
-                ["replace", 2, 3, 2, 3],
-                ["replace", 3, 4, 3, 4],
-                ["replace", 4, 5, 4, 5],
+                ("equal", 0, 1, 0, 1),
+                ("replace", 1, 2, 1, 2),
+                ("replace", 2, 3, 2, 3),
+                ("replace", 3, 4, 3, 4),
+                ("replace", 4, 5, 4, 5),
             ],
         )
         self.assertEqual(edit_distance_backpointer(a, b), bp_expected_result)
@@ -86,12 +86,12 @@ class TestEditDistance(unittest.TestCase):
             4,
             2,
             [
-                ["equal", 0, 1, 0, 1],
-                ["insert", 1, 1, 1, 2],
-                ["equal", 1, 2, 2, 3],
-                ["delete", 2, 3, 2, 2],
-                ["replace", 3, 4, 3, 4],
-                ["replace", 4, 5, 4, 5],
+                ("equal", 0, 1, 0, 1),
+                ("insert", 1, 1, 1, 2),
+                ("equal", 1, 2, 2, 3),
+                ("delete", 2, 3, 2, 2),
+                ("replace", 3, 4, 3, 4),
+                ("replace", 4, 5, 4, 5),
             ],
         )
         self.assertEqual(
@@ -107,18 +107,18 @@ class TestEditDistance(unittest.TestCase):
             5,
             0,
             [
-                ["delete", 0, 1, 0, 0],
-                ["replace", 1, 2, 0, 1],
-                ["replace", 2, 3, 1, 2],
-                ["replace", 3, 4, 2, 3],
-                ["replace", 4, 5, 3, 4],
+                ("delete", 0, 1, 0, 0),
+                ("replace", 1, 2, 0, 1),
+                ("replace", 2, 3, 1, 2),
+                ("replace", 3, 4, 2, 3),
+                ("replace", 4, 5, 3, 4),
             ],
         )
         self.assertEqual(edit_distance_backpointer(a, b), bp_expected_result)
 
     def test_edit_distance4(self):
         """Test edit distance against an empty list."""
-        a = []
+        a: list = []
         b = ["a", "c"]
         self.assertEqual(edit_distance(a, b), (2, 0))
         self.assertEqual(edit_distance(b, a), (2, 0))
@@ -130,10 +130,10 @@ class TestEditDistance(unittest.TestCase):
         b = ["a", "b", "d", "c"]
         sm = SequenceMatcher(a=a, b=b)
         opcodes = [
-            ["equal", 0, 1, 0, 1],
-            ["equal", 1, 2, 1, 2],
-            ["insert", 2, 2, 2, 3],
-            ["insert", 2, 2, 3, 4],
+            ("equal", 0, 1, 0, 1),
+            ("equal", 1, 2, 1, 2),
+            ("insert", 2, 2, 2, 3),
+            ("insert", 2, 2, 3, 4),
         ]
         self.assertEqual(sm.distance(), 2)
         self.assertEqual(sm.ratio(), 2 / 3)
@@ -141,7 +141,8 @@ class TestEditDistance(unittest.TestCase):
         self.assertEqual(sm.real_quick_ratio(), 2 / 3)
         self.assertEqual(sm.distance(), 2)
         # This doesn't return anything, saves the value in the sm cache.
-        self.assertTrue(not sm._compute_distance_fast())
+        # TODO - changed the interface so this doesn't make sense anymore...
+        # self.assertTrue(not sm._compute_distance_fast())
         self.assertEqual(sm.get_opcodes(), opcodes)
         self.assertEqual(list(sm.get_matching_blocks()), [(0, 0, 1), (1, 1, 1)])
 
@@ -169,20 +170,19 @@ class TestEditDistance(unittest.TestCase):
             sm.get_grouped_opcodes()
 
     def test_issue4_simpler(self):
-        """Test for error reported here:
-        https://github.com/belambert/edit-distance/issues/4"""
+        """Test for issue #4: https://github.com/belambert/edit-distance/issues/4"""
         a = ["that", "continuous", "sanction", ":=", "("]
         b = ["continuous", ":=", "(", "sanction", "^"]
         sm = SequenceMatcher(a=a, b=b)
         self.assertEqual(sm.distance(), 4)
         target_opcodes = [
-            ["delete", 0, 1, 0, 0],
-            ["equal", 1, 2, 0, 1],
-            ["delete", 2, 3, 0, 0],
-            ["equal", 3, 4, 1, 2],
-            ["equal", 4, 5, 2, 3],
-            ["insert", 5, 5, 3, 4],
-            ["insert", 5, 5, 4, 5],
+            ("delete", 0, 1, 0, 0),
+            ("equal", 1, 2, 0, 1),
+            ("delete", 2, 3, 0, 0),
+            ("equal", 3, 4, 1, 2),
+            ("equal", 4, 5, 2, 3),
+            ("insert", 5, 5, 3, 4),
+            ("insert", 5, 5, 4, 5),
         ]
         self.assertEqual(sm.get_opcodes(), target_opcodes)
 
@@ -219,7 +219,7 @@ class TestEditDistance(unittest.TestCase):
             "<EOS>",
             "<EOS>",
             "<EOS>",
-        ]  # noqa
+        ]
         b = [
             "continuous",
             ":=",
@@ -250,40 +250,40 @@ class TestEditDistance(unittest.TestCase):
             "<EOS>",
             "<EOS>",
             "<EOS>",
-        ]  # noqa
+        ]
         target_opcodes = [
-            ["delete", 0, 1, 0, 0],
-            ["equal", 1, 2, 0, 1],
-            ["delete", 2, 3, 0, 0],
-            ["equal", 3, 4, 1, 2],
-            ["equal", 4, 5, 2, 3],
-            ["insert", 5, 5, 3, 4],
-            ["insert", 5, 5, 4, 5],
-            ["equal", 5, 6, 5, 6],
-            ["replace", 6, 7, 6, 7],
-            ["replace", 7, 8, 7, 8],
-            ["replace", 8, 9, 8, 9],
-            ["replace", 9, 10, 9, 10],
-            ["replace", 10, 11, 10, 11],
-            ["replace", 11, 12, 11, 12],
-            ["replace", 12, 13, 12, 13],
-            ["replace", 13, 14, 13, 14],
-            ["replace", 14, 15, 14, 15],
-            ["replace", 15, 16, 15, 16],
-            ["replace", 16, 17, 16, 17],
-            ["replace", 17, 18, 17, 18],
-            ["equal", 18, 19, 18, 19],
-            ["equal", 19, 20, 19, 20],
-            ["equal", 20, 21, 20, 21],
-            ["equal", 21, 22, 21, 22],
-            ["equal", 22, 23, 22, 23],
-            ["equal", 23, 24, 23, 24],
-            ["equal", 24, 25, 24, 25],
-            ["equal", 25, 26, 25, 26],
-            ["equal", 26, 27, 26, 27],
-            ["equal", 27, 28, 27, 28],
-            ["equal", 28, 29, 28, 29],
-        ]  # noqa
+            ("delete", 0, 1, 0, 0),
+            ("equal", 1, 2, 0, 1),
+            ("delete", 2, 3, 0, 0),
+            ("equal", 3, 4, 1, 2),
+            ("equal", 4, 5, 2, 3),
+            ("insert", 5, 5, 3, 4),
+            ("insert", 5, 5, 4, 5),
+            ("equal", 5, 6, 5, 6),
+            ("replace", 6, 7, 6, 7),
+            ("replace", 7, 8, 7, 8),
+            ("replace", 8, 9, 8, 9),
+            ("replace", 9, 10, 9, 10),
+            ("replace", 10, 11, 10, 11),
+            ("replace", 11, 12, 11, 12),
+            ("replace", 12, 13, 12, 13),
+            ("replace", 13, 14, 13, 14),
+            ("replace", 14, 15, 14, 15),
+            ("replace", 15, 16, 15, 16),
+            ("replace", 16, 17, 16, 17),
+            ("replace", 17, 18, 17, 18),
+            ("equal", 18, 19, 18, 19),
+            ("equal", 19, 20, 19, 20),
+            ("equal", 20, 21, 20, 21),
+            ("equal", 21, 22, 21, 22),
+            ("equal", 22, 23, 22, 23),
+            ("equal", 23, 24, 23, 24),
+            ("equal", 24, 25, 24, 25),
+            ("equal", 25, 26, 25, 26),
+            ("equal", 26, 27, 26, 27),
+            ("equal", 27, 28, 27, 28),
+            ("equal", 28, 29, 28, 29),
+        ]
         sm = SequenceMatcher(a=a, b=b)
         self.assertEqual(sm.distance(), 16)
         self.assertEqual(sm.get_opcodes(), target_opcodes)
@@ -292,10 +292,10 @@ class TestEditDistance(unittest.TestCase):
         sm = SequenceMatcher(a="abc", b="abdc")
         self.assertEqual(
             [
-                ["equal", 0, 1, 0, 1],
-                ["equal", 1, 2, 1, 2],
-                ["insert", 2, 2, 2, 3],
-                ["equal", 2, 3, 3, 4],
+                ("equal", 0, 1, 0, 1),
+                ("equal", 1, 2, 1, 2),
+                ("insert", 2, 2, 2, 3),
+                ("equal", 2, 3, 3, 4),
             ],
             sm.get_opcodes(),
         )

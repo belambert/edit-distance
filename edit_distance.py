@@ -20,13 +20,13 @@ Code for computing edit distances.
 
 import sys
 import operator
-from typing import List, Sequence, Tuple
+from typing import List, Optional, Sequence, Tuple
 
+# TODO - this should be whatever a Python enum is...
 INSERT: str = "insert"
 DELETE: str = "delete"
 EQUAL: str = "equal"
 REPLACE: str = "replace"
-
 
 OpCode = Tuple[str, int, int, int, int]
 
@@ -131,14 +131,14 @@ class SequenceMatcher(object):
             a = []
         if b is None:
             b = []
-        self.seq1 = a
-        self.seq2 = b
+        self.seq1: Sequence = a
+        self.seq2: Sequence = b
         self._reset_object()
         self.action_function = action_function
         self.test = test
-        self.dist = None
-        self._matches = None
-        self.opcodes = None
+        self.dist: Optional[int] = None
+        self._matches: Optional[int] = None
+        self.opcodes: Optional[List[OpCode]] = None
 
     def set_seqs(self, a: Sequence, b: Sequence) -> None:
         """Specify two alternative sequences -- reset any cached values."""
@@ -167,8 +167,7 @@ class SequenceMatcher(object):
         matches = filter(lambda x: x[0] == EQUAL, self.get_opcodes())
         return [(opcode[1], opcode[3], opcode[2] - opcode[1]) for opcode in matches]
 
-    # need type annotation here.
-    def get_opcodes(self):
+    def get_opcodes(self) -> List[OpCode]:
         """Returns a list of opcodes.  Opcodes are the same as defined by
         :py:mod:`difflib`."""
         if not self.opcodes:
@@ -203,22 +202,22 @@ class SequenceMatcher(object):
         """Same as :py:meth:`ratio`."""
         return self.ratio()
 
-    # needs type
-    def distance(self):
+    def distance(self) -> int:
         """Returns the edit distance of the two loaded sequences.  This should
         be a little faster than getting the same information from
         :py:meth:`get_opcodes`."""
         if not self.dist:
-            self._compute_distance_fast()
+            d, m = self._compute_distance_fast()
+            self.dist = d
         return self.dist
 
-    # needs type
-    def matches(self):
+    def matches(self) -> int:
         """Returns the number of matches in the alignment of the two sequences.
         This should be a little faster than getting the same information from
         :py:meth:`get_opcodes`."""
         if not self._matches:
-            self._compute_distance_fast()
+            d, m = self._compute_distance_fast()
+            self._matches = m
         return self._matches
 
     def _reset_object(self) -> None:
@@ -227,7 +226,7 @@ class SequenceMatcher(object):
         self.dist = None
         self._matches = None
 
-    def _compute_distance_fast(self) -> None:
+    def _compute_distance_fast(self) -> Tuple[int, int]:
         """Calls edit_distance, and asserts that if we already have values for
         matches and distance, that they match."""
         d, m = edit_distance(
@@ -237,21 +236,23 @@ class SequenceMatcher(object):
             assert d == self.dist
         if self._matches:
             assert m == self._matches
-        self.dist = d
-        self._matches = m
+        return d, m
 
 
 def edit_distance(
     seq1: Sequence, seq2: Sequence, action_function=lowest_cost_action, test=operator.eq
-):
+) -> Tuple[int, int]:
     """
     Computes the edit distance between the two given sequences.  This uses the
     relatively fast method that only constructs two columns of the 2d array
     for edits.  This function actually uses four columns because we track the
     number of matches too.
+
+    Test is a boolean function, and substitution cost is 0 if true, else 1.
+    Insertion and deletion cost are always 1.
     """
-    m = len(seq1)
-    n = len(seq2)
+    m: int = len(seq1)
+    n: int = len(seq2)
     # Special, easy cases:
     if seq1 == seq2:
         return 0, n
@@ -259,10 +260,13 @@ def edit_distance(
         return n, 0
     if n == 0:
         return m, 0
-    v0 = [0] * (n + 1)  # The two 'error' columns
-    v1 = [0] * (n + 1)
-    m0 = [0] * (n + 1)  # The two 'match' columns
-    m1 = [0] * (n + 1)
+
+    # we could use the Python array type rather than lists, but elements would have to
+    # have predefined type...?  https://docs.python.org/3/library/array.html
+    v0: List[int] = [0] * (n + 1)  # The two 'error' columns
+    v1: List[int] = [0] * (n + 1)
+    m0: List[int] = [0] * (n + 1)  # The two 'match' columns
+    m1: List[int] = [0] * (n + 1)
     for i in range(1, n + 1):
         v0[i] = i
     for i in range(1, m + 1):
@@ -293,7 +297,8 @@ def edit_distance(
                 m1[j] = del_match
             else:
                 raise Exception("Invalid dynamic programming option returned!")
-                # Copy the columns over
+        # Copy the columns over
+        # TODO - we could just swap them
         for k in range(0, n + 1):
             v0[k] = v1[k]
             m0[k] = m1[k]
@@ -301,8 +306,8 @@ def edit_distance(
 
 
 def edit_distance_backpointer(
-    seq1, seq2, action_function=lowest_cost_action, test=operator.eq
-):
+    seq1: Sequence, seq2: Sequence, action_function=lowest_cost_action, test=operator.eq
+) -> Tuple[int, int, List[OpCode]]:
     """
     Similar to :py:func:`~edit_distance.edit_distance` except that this
     function keeps backpointers during the search.  This allows us to return
@@ -313,13 +318,13 @@ def edit_distance_backpointer(
     m: int = len(seq1)
     n: int = len(seq2)
     # backpointer array:
-    bp = [[None for x in range(n + 1)] for y in range(m + 1)]
+    bp: List[List[Optional[str]]] = [[None for x in range(n + 1)] for y in range(m + 1)]
 
     # Two columns of the distance and match arrays
-    d0 = [0] * (n + 1)  # The two 'distance' columns
-    d1 = [0] * (n + 1)
-    m0 = [0] * (n + 1)  # The two 'match' columns
-    m1 = [0] * (n + 1)
+    d0: List[int] = [0] * (n + 1)  # The two 'distance' columns
+    d1: List[int] = [0] * (n + 1)
+    m0: List[int] = [0] * (n + 1)  # The two 'match' columns
+    m1: List[int] = [0] * (n + 1)
 
     # Fill in the first column
     for i in range(1, n + 1):
@@ -365,6 +370,7 @@ def edit_distance_backpointer(
             else:
                 raise Exception("Invalid dynamic programming action returned!")
         # copy over the columns
+        # TODO - we could just swap them
         for k in range(0, n + 1):
             d0[k] = d1[k]
             m0[k] = m1[k]
@@ -372,22 +378,22 @@ def edit_distance_backpointer(
     return d1[n], m1[n], opcodes
 
 
-def get_opcodes_from_bp_table(bp):
+def get_opcodes_from_bp_table(bp) -> List[OpCode]:
     """Given a 2d list structure, create opcodes from the best path."""
-    x = len(bp) - 1
-    y = len(bp[0]) - 1
-    opcodes = []
+    x: int = len(bp) - 1
+    y: int = len(bp[0]) - 1
+    opcodes: List[OpCode] = []
     while x != 0 or y != 0:
         this_bp = bp[x][y]
         if this_bp == EQUAL or this_bp == REPLACE:
-            opcodes.append([this_bp, max(x - 1, 0), x, max(y - 1, 0), y])
+            opcodes.append((this_bp, max(x - 1, 0), x, max(y - 1, 0), y))
             x = x - 1
             y = y - 1
         elif this_bp == INSERT:
-            opcodes.append([INSERT, x, x, max(y - 1, 0), y])
+            opcodes.append((INSERT, x, x, max(y - 1, 0), y))
             y = y - 1
         elif this_bp == DELETE:
-            opcodes.append([DELETE, max(x - 1, 0), x, max(y - 1, 0), max(y - 1, 0)])
+            opcodes.append((DELETE, max(x - 1, 0), x, max(y - 1, 0), max(y - 1, 0)))
             x = x - 1
         else:
             raise Exception("Invalid dynamic programming action in BP table!")
