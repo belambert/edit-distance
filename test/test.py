@@ -143,7 +143,7 @@ class TestEditDistance(unittest.TestCase):
         # This doesn't return anything, saves the value in the sm cache.
         self.assertTrue(not sm._compute_distance_fast())
         self.assertEqual(sm.get_opcodes(), opcodes)
-        self.assertEqual(list(sm.get_matching_blocks()), [[0, 0, 1], [1, 1, 1]])
+        self.assertEqual(list(sm.get_matching_blocks()), [(0, 0, 1), (1, 1, 1)])
 
     def test_sequence_matcher2(self):
         """Test the sequence matcher."""
