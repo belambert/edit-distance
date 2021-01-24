@@ -20,18 +20,19 @@ Code for computing edit distances.
 
 import sys
 import operator
+from typing import Sequence
 
-INSERT = "insert"
-DELETE = "delete"
-EQUAL = "equal"
-REPLACE = "replace"
+INSERT: str = "insert"
+DELETE: str = "delete"
+EQUAL: str = "equal"
+REPLACE: str = "replace"
 
 
 # Cost is basically: was there a match or not.
 # The other numbers are cumulative costs and matches.
 
 
-def lowest_cost_action(ic, dc, sc, im, dm, sm, cost):
+def lowest_cost_action(ic, dc, sc, im, dm, sm, cost) -> str:
     """Given the following values, choose the action (insertion, deletion,
     or substitution), that results in the lowest cost (ties are broken using
     the 'match' score).  This is used within the dynamic programming algorithm.
@@ -63,10 +64,12 @@ def lowest_cost_action(ic, dc, sc, im, dm, sm, cost):
     elif min_cost == dc and dm > best_match_count:
         best_action = DELETE
         best_match_count = dm
+    else:
+        raise Exception("internal error: invalid lowest cost action")
     return best_action
 
 
-def highest_match_action(ic, dc, sc, im, dm, sm, cost):
+def highest_match_action(ic, dc, sc, im, dm, sm, cost) -> str:
     """Given the following values, choose the action (insertion, deletion, or
     substitution), that results in the highest match score (ties are broken
     using the distance values).  This is used within the dynamic programming
@@ -99,6 +102,8 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost):
     elif max_match == dm and dc < lowest_cost:
         best_action = DELETE
         lowest_cost = dc
+    else:
+        raise Exception("internal error: invalid highest match action")
     return best_action
 
 
@@ -109,7 +114,11 @@ class SequenceMatcher(object):
     """
 
     def __init__(
-        self, a=None, b=None, test=operator.eq, action_function=lowest_cost_action
+        self,
+        a: Sequence = None,
+        b: Sequence = None,
+        test=operator.eq,
+        action_function=lowest_cost_action,
     ):
         """
         Initialize the object with sequences a and b.  Optionally, one can
@@ -129,29 +138,29 @@ class SequenceMatcher(object):
         self._matches = None
         self.opcodes = None
 
-    def set_seqs(self, a, b):
+    def set_seqs(self, a: Sequence, b: Sequence) -> None:
         """Specify two alternative sequences -- reset any cached values."""
         self.set_seq1(a)
         self.set_seq2(b)
         self._reset_object()
 
-    def _reset_object(self):
+    def _reset_object(self) -> None:
         """Clear out the cached values for distance, matches, and opcodes."""
         self.opcodes = None
         self.dist = None
         self._matches = None
 
-    def set_seq1(self, a):
+    def set_seq1(self, a: Sequence) -> None:
         """Specify a new sequence for sequence 1, resetting cached values."""
         self._reset_object()
         self.seq1 = a
 
-    def set_seq2(self, b):
+    def set_seq2(self, b: Sequence) -> None:
         """Specify a new sequence for sequence 2, resetting cached values."""
         self._reset_object()
         self.seq2 = b
 
-    def find_longest_match(self, alo, ahi, blo, bhi):
+    def find_longest_match(self, alo, ahi, blo, bhi) -> None:
         """Not implemented!"""
         raise NotImplementedError()
 
@@ -188,19 +197,19 @@ class SequenceMatcher(object):
         """Not implemented!"""
         raise NotImplementedError()
 
-    def ratio(self):
+    def ratio(self) -> float:
         """Ratio of matches to the average sequence length."""
         return 2.0 * self.matches() / (len(self.seq1) + len(self.seq2))
 
-    def quick_ratio(self):
+    def quick_ratio(self) -> float:
         """Same as :py:meth:`ratio`."""
         return self.ratio()
 
-    def real_quick_ratio(self):
+    def real_quick_ratio(self) -> float:
         """Same as :py:meth:`ratio`."""
         return self.ratio()
 
-    def _compute_distance_fast(self):
+    def _compute_distance_fast(self) -> None:
         """Calls edit_distance, and asserts that if we already have values for
         matches and distance, that they match."""
         d, m = edit_distance(
@@ -230,7 +239,9 @@ class SequenceMatcher(object):
         return self._matches
 
 
-def edit_distance(seq1, seq2, action_function=lowest_cost_action, test=operator.eq):
+def edit_distance(
+    seq1: Sequence, seq2: Sequence, action_function=lowest_cost_action, test=operator.eq
+):
     """
     Computes the edit distance between the two given sequences.  This uses the
     relatively fast method that only constructs two columns of the 2d array
@@ -297,8 +308,8 @@ def edit_distance_backpointer(
     string to another).  This function contructs the full 2d array for the
     backpointers only.
     """
-    m = len(seq1)
-    n = len(seq2)
+    m: int = len(seq1)
+    n: int = len(seq2)
     # backpointer array:
     bp = [[None for x in range(n + 1)] for y in range(m + 1)]
 
@@ -382,7 +393,7 @@ def get_opcodes_from_bp_table(bp):
     return opcodes
 
 
-def main():
+def main() -> int:
     """Read two files line-by-line and print edit distances between each pair
     of lines. Will terminate at the end of the shorter of the two files."""
 
@@ -399,6 +410,7 @@ def main():
             dist, _, _ = edit_distance_backpointer(line1.split(), line2.split())
             print("Distance: {}".format(dist))
             print("=" * 80)
+    return 0
 
 
 if __name__ == "__main__":

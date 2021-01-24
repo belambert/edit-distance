@@ -20,6 +20,8 @@ jobs:
       - run:
           command: flake8 edit_distance.py test
       - run:
+          command: mypy edit_distance.py test
+      - run:
           command: |
             python -m coverage run setup.py test
             coverage report
@@ -35,4 +37,4 @@ workflows:
       - python/test:
           matrix:
             parameters:
-              version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9"]
+              version: ["3.6", "3.7", "3.8", "3.9"]
