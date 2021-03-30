@@ -1,6 +1,6 @@
 version: 2.1
 
-# TODO - need to add mypy, deployment, and upload coverage to codecov?
+# TODO - need to add deployment, and upload coverage to codecov?
 
 orbs:
   python: circleci/python@1.2.1
