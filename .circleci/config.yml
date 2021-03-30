@@ -20,7 +20,9 @@ jobs:
       - run:
           command: flake8 edit_distance.py test
       - run:
-          command: mypy edit_distance.py test
+          command: mypy *.py test
+      - run:
+          command: black --check --diff *.py test
       - run:
           command: |
             python -m coverage run setup.py test
