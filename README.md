@@ -2,7 +2,7 @@ edit_distance
 =============
 [![CircleCI](https://circleci.com/gh/belambert/edit-distance.svg?style=shield)](https://circleci.com/gh/belambert/edit-distance)
 [![PyPI version](https://badge.fury.io/py/Edit_Distance.svg)](https://badge.fury.io/py/Edit_Distance)
-[![codecov](https://codecov.io/gh/belambert/edit-distance/branch/master/graph/badge.svg)](https://codecov.io/gh/belambert/edit-distance)
+[![codecov](https://codecov.io/gh/belambert/edit-distance/branch/main/graph/badge.svg)](https://codecov.io/gh/belambert/edit-distance)
 
 Python module for computing edit distances and alignments between sequences.
 
