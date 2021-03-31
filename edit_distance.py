@@ -30,6 +30,13 @@ REPLACE: str = "replace"
 
 OpCode = Tuple[str, int, int, int, int]
 
+
+class Match(NamedTuple):
+    a: int
+    b: int
+    size: int
+
+
 # Cost is basically: was there a match or not.
 # The other numbers are cumulative costs and matches.
 
@@ -136,15 +143,15 @@ class SequenceMatcher(object):
         self._reset_object()
         self.action_function = action_function
         self.test = test
-        self.dist: Optional[int] = None
+        self._dist: Optional[int] = None
         self._matches: Optional[int] = None
-        self.opcodes: Optional[List[OpCode]] = None
+        self._opcodes: Optional[List[OpCode]] = None
 
     def set_seqs(self, a: Sequence, b: Sequence) -> None:
         """Specify two alternative sequences -- reset any cached values."""
+        self._reset_object()
         self.set_seq1(a)
         self.set_seq2(b)
-        self._reset_object()
 
     def set_seq1(self, a: Sequence) -> None:
         """Specify a new sequence for sequence 1, resetting cached values."""
@@ -160,33 +167,35 @@ class SequenceMatcher(object):
         """Not implemented!"""
         raise NotImplementedError()
 
-    def get_matching_blocks(self) -> List[Tuple[int, int, int]]:
+    def get_matching_blocks(self) -> List[Match]:
         """Similar to :py:meth:`get_opcodes`, but returns only the opcodes that are
         equal and returns them in a somewhat different format
         (i.e. ``(i, j, n)`` )."""
         matches = filter(lambda x: x[0] == EQUAL, self.get_opcodes())
-        return [(opcode[1], opcode[3], opcode[2] - opcode[1]) for opcode in matches]
+        return [
+            Match(opcode[1], opcode[3], opcode[2] - opcode[1]) for opcode in matches
+        ]
 
     def get_opcodes(self) -> List[OpCode]:
         """Returns a list of opcodes.  Opcodes are the same as defined by
         :py:mod:`difflib`."""
-        if not self.opcodes:
+        if not self._opcodes:
             d, m, opcodes = edit_distance_backpointer(
                 self.seq1,
                 self.seq2,
                 action_function=self.action_function,
                 test=self.test,
             )
-            if self.dist:
-                assert d == self.dist
+            if self._dist:
+                assert d == self._dist
             if self._matches:
                 assert m == self._matches
-            self.dist = d
+            self._dist = d
             self._matches = m
-            self.opcodes = opcodes
-        return self.opcodes
+            self._opcodes = opcodes
+        return self._opcodes
 
-    def get_grouped_opcodes(self, n=None) -> None:
+    def get_grouped_opcodes(self, n: int) -> None:
         """Not implemented!"""
         raise NotImplementedError()
 
@@ -206,10 +215,10 @@ class SequenceMatcher(object):
         """Returns the edit distance of the two loaded sequences.  This should
         be a little faster than getting the same information from
         :py:meth:`get_opcodes`."""
-        if not self.dist:
+        if not self._dist:
             d, m = self._compute_distance_fast()
-            self.dist = d
-        return self.dist
+            self._dist = d
+        return self._dist
 
     def matches(self) -> int:
         """Returns the number of matches in the alignment of the two sequences.
@@ -222,8 +231,8 @@ class SequenceMatcher(object):
 
     def _reset_object(self) -> None:
         """Clear out the cached values for distance, matches, and opcodes."""
-        self.opcodes = None
-        self.dist = None
+        self._opcodes = None
+        self._dist = None
         self._matches = None
 
     def _compute_distance_fast(self) -> Tuple[int, int]:
@@ -232,8 +241,8 @@ class SequenceMatcher(object):
         d, m = edit_distance(
             self.seq1, self.seq2, action_function=self.action_function, test=self.test
         )
-        if self.dist:
-            assert d == self.dist
+        if self._dist:
+            assert d == self._dist
         if self._matches:
             assert m == self._matches
         return d, m
