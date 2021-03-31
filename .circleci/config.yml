@@ -1,6 +1,6 @@
 version: 2.1
 
-# TODO - need to add mypy, deployment, and upload coverage to codecov?
+# TODO - need to add deployment, and upload coverage to codecov?
 
 orbs:
   python: circleci/python@1.2.1
@@ -20,7 +20,9 @@ jobs:
       - run:
           command: flake8 edit_distance.py test
       - run:
-          command: mypy edit_distance.py test
+          command: mypy *.py test
+      - run:
+          command: black --check --diff *.py test
       - run:
           command: |
             python -m coverage run setup.py test
