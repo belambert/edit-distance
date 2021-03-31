@@ -20,9 +20,8 @@ Code for computing edit distances.
 
 import sys
 import operator
-from typing import List, Optional, Sequence, Tuple
+from typing import List, NamedTuple, Optional, Sequence, Tuple
 
-# TODO - this should be whatever a Python enum is...
 INSERT: str = "insert"
 DELETE: str = "delete"
 EQUAL: str = "equal"
@@ -270,8 +269,6 @@ def edit_distance(
     if n == 0:
         return m, 0
 
-    # we could use the Python array type rather than lists, but elements would have to
-    # have predefined type...?  https://docs.python.org/3/library/array.html
     v0: List[int] = [0] * (n + 1)  # The two 'error' columns
     v1: List[int] = [0] * (n + 1)
     m0: List[int] = [0] * (n + 1)  # The two 'match' columns

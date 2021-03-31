@@ -167,7 +167,7 @@ class TestEditDistance(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             sm.find_longest_match(1, 2, 3, 4)
         with self.assertRaises(NotImplementedError):
-            sm.get_grouped_opcodes()
+            sm.get_grouped_opcodes(n=3)
 
     def test_issue4_simpler(self):
         """Test for issue #4: https://github.com/belambert/edit-distance/issues/4"""
