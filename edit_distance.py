@@ -292,7 +292,7 @@ def edit_distance(
             else:
                 raise Exception("Invalid dynamic programming option returned!")
                 # Copy the columns over
-        for k in range(0, n + 1):
+        for k in range(n + 1):
             v0[k] = v1[k]
             m0[k] = m1[k]
     return v1[n], m1[n]
@@ -363,7 +363,7 @@ def edit_distance_backpointer(
             else:
                 raise Exception("Invalid dynamic programming action returned!")
         # copy over the columns
-        for k in range(0, n + 1):
+        for k in range(n + 1):
             d0[k] = d1[k]
             m0[k] = m1[k]
     opcodes = get_opcodes_from_bp_table(bp)
@@ -377,7 +377,7 @@ def get_opcodes_from_bp_table(bp):
     opcodes = []
     while x != 0 or y != 0:
         this_bp = bp[x][y]
-        if this_bp == EQUAL or this_bp == REPLACE:
+        if this_bp in [EQUAL, REPLACE]:
             opcodes.append([this_bp, max(x - 1, 0), x, max(y - 1, 0), y])
             x = x - 1
             y = y - 1
