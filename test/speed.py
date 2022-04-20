@@ -33,10 +33,10 @@ run_strings = [
 
 def speed_tests():
     for a, b in sequences:
-        print("For sequences: a={}, b={}".format(a, b))
-        setup_string = "import edit_distance; a = {}; b = {}".format(a, b)
+        print(f"For sequences: a={a}, b={b}")
+        setup_string = f"import edit_distance; a = {a}; b = {b}"
         for run_string in run_strings:
-            print("For: {}".format(run_string))
+            print(f"For: {run_string}")
             t = timeit.Timer(run_string, setup=setup_string)
             total_time = t.timeit(number=n)
             print("Average time: {:.4} ms".format(total_time / n * 1000))

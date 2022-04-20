@@ -311,7 +311,7 @@ def edit_distance_backpointer(
     m: int = len(seq1)
     n: int = len(seq2)
     # backpointer array:
-    bp = [[None for x in range(n + 1)] for y in range(m + 1)]
+    bp = [[None for _ in range(n + 1)] for _ in range(m + 1)]
 
     # Two columns of the distance and match arrays
     d0 = [0] * (n + 1)  # The two 'distance' columns
@@ -398,17 +398,17 @@ def main() -> int:
     of lines. Will terminate at the end of the shorter of the two files."""
 
     if len(sys.argv) != 3:
-        print("Usage: {} <file1> <file2>".format(sys.argv[0]))
+        print(f"Usage: {sys.argv[0]} <file1> <file2>")
         exit(-1)
     file1 = sys.argv[1]
     file2 = sys.argv[2]
 
     with open(file1) as f1, open(file2) as f2:
         for line1, line2 in zip(f1, f2):
-            print("Line 1: {}".format(line1.strip()))
-            print("Line 2: {}".format(line2.strip()))
+            print(f"Line 1: {line1.strip()}")
+            print(f"Line 2: {line2.strip()}")
             dist, _, _ = edit_distance_backpointer(line1.split(), line2.split())
-            print("Distance: {}".format(dist))
+            print(f"Distance: {dist}")
             print("=" * 80)
     return 0
 
