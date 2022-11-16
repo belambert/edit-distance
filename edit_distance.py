@@ -20,7 +20,7 @@ Code for computing edit distances.
 
 import sys
 import operator
-from typing import Sequence
+from typing import Optional, Sequence
 
 INSERT: str = "insert"
 DELETE: str = "delete"
@@ -115,8 +115,8 @@ class SequenceMatcher(object):
 
     def __init__(
         self,
-        a: Sequence = None,
-        b: Sequence = None,
+        a: Optional[Sequence] = None,
+        b: Optional[Sequence] = None,
         test=operator.eq,
         action_function=lowest_cost_action,
     ):
