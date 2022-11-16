@@ -6,7 +6,7 @@ orbs:
   python: circleci/python@1.2.1
 
 jobs:
-  reporting:
+  aux:
     executor: python/default
     steps:
       - checkout
@@ -35,7 +35,7 @@ jobs:
 workflows:
   main:
     jobs:
-      - reporting
+      - aux
       - python/test:
           matrix:
             parameters:
