@@ -4,6 +4,8 @@ version: 2.1
 
 orbs:
   python: circleci/python@1.2.1
+  codecov: codecov/codecov@3.2.4
+
 
 jobs:
   aux:
@@ -24,13 +26,9 @@ jobs:
       - run:
           command: black --check --diff *.py test
       - run:
-          command: |
-            python -m coverage run setup.py test
-            coverage report
-            coverage html
-          name: test coverage
-      - store_artifacts:
-          path: htmlcov
+          command: pytest --cov .
+          name: run tests for coverage
+      - codecov/upload
 
 workflows:
   main:
@@ -39,4 +37,4 @@ workflows:
       - python/test:
           matrix:
             parameters:
-              version: ["3.6", "3.7", "3.8", "3.9"]
+              version: ["3.6", "3.7", "3.8", "3.9", "3.10"]

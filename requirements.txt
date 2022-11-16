@@ -2,4 +2,6 @@ black
 coverage
 flake8
 mypy
+pytest
+pytest-cov
 unittest-xml-reporting
