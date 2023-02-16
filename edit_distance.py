@@ -329,7 +329,6 @@ def edit_distance_backpointer(
         bp[i][0] = DELETE
 
         for j in range(1, n + 1):
-
             cost = 0 if test(seq1[i - 1], seq2[j - 1]) else 1
             # The costs of each action...
             ins_cost = d1[j - 1] + 1  # insertion
