@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="edit_distance",
-    version="1.0.4",
+    version="1.0.5",
     author="Ben Lambert",
     author_email="blambert@gmail.com",
     license="LICENSE.txt",
