@@ -32,3 +32,4 @@ jobs:
         run: black --check --diff *.py test
       - name: Test with pytest
         run: pytest --cov .
+      - uses: codecov/codecov-action@v3
