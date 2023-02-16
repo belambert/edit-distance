@@ -31,4 +31,4 @@ jobs:
       - name: Check formatting with black
         run: black --check --diff *.py test
       - name: Test with pytest
-        run: pytest
+        run: pytest --cov .
