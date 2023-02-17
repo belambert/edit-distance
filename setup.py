@@ -22,4 +22,5 @@ setup(
         "License :: OSI Approved :: Apache Software License",
     ],
     entry_points={"console_scripts": ["edit-distance = edit_distance.code:main"]},
+    package_data={"edit_distance": ["py.typed"]},
 )
