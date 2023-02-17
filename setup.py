@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="edit_distance",
-    version="1.0.5",
+    version="1.0.6",
     author="Ben Lambert",
     author_email="blambert@gmail.com",
     license="LICENSE.txt",
@@ -22,4 +22,5 @@ setup(
         "License :: OSI Approved :: Apache Software License",
     ],
     entry_points={"console_scripts": ["edit-distance = edit_distance.code:main"]},
+    package_data={"edit_distance": ["py.typed"]},
 )
