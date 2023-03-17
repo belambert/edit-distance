@@ -107,7 +107,7 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost) -> str:
     return best_action
 
 
-class SequenceMatcher(object):
+class SequenceMatcher:
     """
     Similar to the :py:mod:`difflib` :py:class:`~difflib.SequenceMatcher`, but
     uses Levenshtein/edit distance.
@@ -398,7 +398,7 @@ def main() -> int:
 
     if len(sys.argv) != 3:
         print(f"Usage: {sys.argv[0]} <file1> <file2>")
-        exit(-1)
+        sys.exit(-1)
     file1 = sys.argv[1]
     file2 = sys.argv[2]
 

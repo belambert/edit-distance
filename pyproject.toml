@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "edit-distance"
+version = "1.0.7"
+description = "Computing edit distance on arbitrary Python sequences"
+authors = ["Ben Lambert <blambert@gmail.com>"]
+readme = "README.md"
+packages = [{include = "edit_distance"}]
+repository="https://github.com/belambert/editdistance"
+keywords=["edit", "distance", "editdistance", "levenshtein"]
+license = "MIT"
+classifiers = [
+	"Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
+        "Programming Language :: Python",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Text Processing",
+        "Topic :: Utilities",
+        "License :: OSI Approved :: Apache Software License",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.7.2,<4.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+coverage = "^7.2.2"
+pylint = "^2.17.0"
+mypy = "^1.1.1"
+pytest = "^7.2.2"
+pytest-cov = "^4.0.0"
+unittest-xml-reporting = "^3.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+edit-distance = "edit_distance.edit_distance:main"
+
+[tool.pylint."messages control"]
+disable = [
+    "invalid-name",
+    "broad-exception-raised",
+    "too-many-arguments",
+    "too-many-locals",
+    "missing-module-docstring",
+    "unused-argument",
+    "unspecified-encoding"
+]
+
+[tool.pylint.reports]
+score = false
