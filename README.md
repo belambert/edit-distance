@@ -105,3 +105,5 @@ testing and documentation required.
 
 Code of conduct is expected to be reasonable, especially as specified by
 the [Contributor Covenant](http://contributor-covenant.org/version/1/4/)
+
+test addition
