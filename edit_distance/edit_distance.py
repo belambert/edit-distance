@@ -32,7 +32,9 @@ REPLACE: str = "replace"
 # The other numbers are cumulative costs and matches.
 
 
-def lowest_cost_action(ic, dc, sc, im, dm, sm, cost) -> str:
+def lowest_cost_action(
+    ic, dc, sc, im, dm, sm, cost
+) -> str:  # pylint: disable=too-many-positional-arguments
     """Given the following values, choose the action (insertion, deletion,
     or substitution), that results in the lowest cost (ties are broken using
     the 'match' score).  This is used within the dynamic programming algorithm.
@@ -69,7 +71,9 @@ def lowest_cost_action(ic, dc, sc, im, dm, sm, cost) -> str:
     return best_action
 
 
-def highest_match_action(ic, dc, sc, im, dm, sm, cost) -> str:
+def highest_match_action(
+    ic, dc, sc, im, dm, sm, cost
+) -> str:  # pylint: disable=too-many-positional-arguments
     """Given the following values, choose the action (insertion, deletion, or
     substitution), that results in the highest match score (ties are broken
     using the distance values).  This is used within the dynamic programming
