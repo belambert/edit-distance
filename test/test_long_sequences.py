@@ -18,8 +18,7 @@ Unit tests for edit_distance.
 
 import unittest
 
-from edit_distance import edit_distance_backpointer
-from edit_distance import edit_distance
+from edit_distance import edit_distance, edit_distance_backpointer
 
 
 class TestLongSequences(unittest.TestCase):

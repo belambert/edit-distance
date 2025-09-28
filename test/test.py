@@ -17,10 +17,12 @@ Unit tests for edit_distance.
 """
 import unittest
 
-from edit_distance import edit_distance_backpointer
-from edit_distance import edit_distance
-from edit_distance import highest_match_action
-from edit_distance import SequenceMatcher
+from edit_distance import (
+    SequenceMatcher,
+    edit_distance,
+    edit_distance_backpointer,
+    highest_match_action,
+)
 
 
 class TestEditDistance(unittest.TestCase):
