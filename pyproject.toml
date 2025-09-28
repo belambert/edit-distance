@@ -5,13 +5,22 @@ description = "Computing edit distance on arbitrary Python sequences"
 authors = ["Ben Lambert <blambert@gmail.com>"]
 readme = "README.md"
 packages = [{include = "edit_distance"}]
-repository="https://github.com/belambert/editdistance"
+include = ["py.typed"]
+homepage = "https://github.com/belambert/edit-distance"
+repository = "https://github.com/belambert/edit-distance"
+documentation = "https://edit-distance.readthedocs.io/"
 keywords=["edit", "distance", "editdistance", "levenshtein"]
 license = "MIT"
 classifiers = [
 	"Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Text Processing",
         "Topic :: Utilities",
@@ -54,3 +63,18 @@ score = false
 
 [tool.isort]
 profile = "black"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+
+[tool.coverage.run]
+source = ["edit_distance"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]
