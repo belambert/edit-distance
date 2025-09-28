@@ -39,4 +39,4 @@ def speed_tests():
             print(f"For: {run_string}")
             t = timeit.Timer(run_string, setup=setup_string)
             total_time = t.timeit(number=n)
-            print("Average time: {:.4} ms".format(total_time / n * 1000))
+            print(f"Average time: {total_time / n * 1000:.4} ms")

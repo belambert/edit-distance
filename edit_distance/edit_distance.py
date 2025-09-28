@@ -20,7 +20,8 @@ Code for computing edit distances.
 
 import operator
 import sys
-from typing import Optional, Sequence
+from collections.abc import Sequence
+from typing import Optional
 
 INSERT: str = "insert"
 DELETE: str = "delete"
