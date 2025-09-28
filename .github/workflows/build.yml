@@ -3,8 +3,27 @@ name: build
 on: [push]
 
 jobs:
-  build:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install --with=dev
+      - name: Lint with pylint
+        run: |
+          poetry run pylint edit_distance
+      - name: Check types with mypy
+        run: poetry run mypy edit_distance test
+      - name: Check formatting with black
+        run: poetry run black --check --diff edit_distance test
 
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -20,13 +39,6 @@ jobs:
         run: |
           pip install poetry
           poetry install --with=dev
-      - name: Lint with flake8
-        run: |
-          poetry run pylint edit_distance
-      - name: Check types with mypy
-        run: poetry run mypy edit_distance test
-      - name: Check formatting with black
-        run: poetry run black --check --diff edit_distance test
       - name: Test with pytest
         run: poetry run pytest --cov=. --cov-report=xml .
       - uses: codecov/codecov-action@v5
