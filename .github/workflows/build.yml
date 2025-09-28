@@ -14,9 +14,8 @@ jobs:
         run: |
           pip install poetry
           poetry install --with=dev
-      - name: Lint with pylint
-        run: |
-          poetry run pylint edit_distance
+      - name: lint with pylint
+        run: poetry run pylint edit_distance
       - name: check types with mypy
         run: poetry run mypy edit_distance test
       - name: check formatting with black

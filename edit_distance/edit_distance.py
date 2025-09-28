@@ -32,6 +32,7 @@ REPLACE: str = "replace"
 # The other numbers are cumulative costs and matches.
 
 
+# pylint: disable-next=too-many-positional-arguments
 def lowest_cost_action(ic, dc, sc, im, dm, sm, cost) -> str:
     """Given the following values, choose the action (insertion, deletion,
     or substitution), that results in the lowest cost (ties are broken using
@@ -69,6 +70,7 @@ def lowest_cost_action(ic, dc, sc, im, dm, sm, cost) -> str:
     return best_action
 
 
+# pylint: disable-next=too-many-positional-arguments
 def highest_match_action(ic, dc, sc, im, dm, sm, cost) -> str:
     """Given the following values, choose the action (insertion, deletion, or
     substitution), that results in the highest match score (ties are broken
