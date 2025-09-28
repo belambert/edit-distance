@@ -7,22 +7,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
-      - name: Install dependencies
+      - name: install dependencies
         run: |
           pip install poetry
           poetry install --with=dev
       - name: Lint with pylint
         run: |
           poetry run pylint edit_distance
-      - name: Check types with mypy
+      - name: check types with mypy
         run: poetry run mypy edit_distance test
-      - name: Check formatting with black
+      - name: check formatting with black
         run: poetry run black --check --diff edit_distance test
-      - name: Get test coverage
+      - name: get test coverage
         run: poetry run pytest --cov=. --cov-report=xml .
       - uses: codecov/codecov-action@v5
         with:
