@@ -22,6 +22,8 @@ jobs:
         run: make format
       - name: check import sorting with isort
         run: make isort
+      - name: check Python syntax upgrades with pyupgrade
+        run: make pyupgrade
       - name: get test coverage
         run: make test
       - uses: codecov/codecov-action@v5
