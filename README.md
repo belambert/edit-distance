@@ -1,6 +1,6 @@
 edit_distance
 =============
-![build](https://github.com/belambert/edit-distance/actions/workflows/build.yml/badge.svg)
+[![build](https://github.com/belambert/edit-distance/actions/workflows/build.yml/badge.svg)](https://github.com/belambert/edit-distance/actions/workflows/build.yml)
 [![PyPI version](https://badge.fury.io/py/Edit_Distance.svg)](https://badge.fury.io/py/Edit_Distance)
 [![codecov](https://codecov.io/gh/belambert/edit-distance/branch/main/graph/badge.svg?token=43c8bYhWeL)](https://codecov.io/gh/belambert/edit-distance)
 
