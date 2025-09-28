@@ -18,8 +18,8 @@
 Code for computing edit distances.
 """
 
-import sys
 import operator
+import sys
 from typing import Optional, Sequence
 
 INSERT: str = "insert"
