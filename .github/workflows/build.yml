@@ -15,13 +15,13 @@ jobs:
           pip install poetry
           poetry install --with=dev
       - name: lint with pylint
-        run: poetry run pylint edit_distance
+        run: make lint
       - name: check types with mypy
-        run: poetry run mypy edit_distance test
+        run: make typecheck
       - name: check formatting with black
-        run: poetry run black --check --diff edit_distance test
+        run: make format
       - name: get test coverage
-        run: poetry run pytest --cov=. --cov-report=xml .
+        run: make test
       - uses: codecov/codecov-action@v5
         with:
           files: ./coverage.xml
