@@ -5,7 +5,6 @@ description = "Computing edit distance on arbitrary Python sequences"
 authors = ["Ben Lambert <blambert@gmail.com>"]
 readme = "README.md"
 packages = [{include = "edit_distance"}]
-include = ["py.typed"]
 homepage = "https://github.com/belambert/edit-distance"
 repository = "https://github.com/belambert/edit-distance"
 documentation = "https://edit-distance.readthedocs.io/"
