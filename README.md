@@ -30,36 +30,41 @@ The easiest way to install is using pip:
 
     pip install edit_distance
 
-Alternatively you can clone this git repo and install using distutils:
-
-    git clone git@github.com:belambert/edit_distance.git
-    cd edit_distance
-    python setup.py install
-
 To uninstall with pip:
 
     pip uninstall edit_distance
 
+This requires Python 3.9 or later.
 
 API usage
 ---------
-To see examples of usage, view the [difflib documentation](http://docs.python.org/2/library/difflib.html).
+To see examples of usage, view the [difflib documentation](https://docs.python.org/3/library/difflib.html).
 Additional API-level documentation is available on [ReadTheDocs](http://edit-distance.readthedocs.io/en/latest/)
-
-This requires Python 2.7+ since it uses argparse for the command line 
-interface.  The rest of the code should be OK with earlier versions of Python
 
 Example API usage:
 
 ```python
 import edit_distance
-ref = [1, 2, 3, 4]
-hyp = [1, 2, 4, 5, 6]
+ref = ["hi", "there", "how", "are", "you"]
+hyp = ["hi", "here", "how", "are", "you", "doing"]
 sm = edit_distance.SequenceMatcher(a=ref, b=hyp)
+
+sm.distance()
+# 2
 sm.get_opcodes()
+# [['equal', 0, 1, 0, 1], ['replace', 1, 2, 1, 2], ['equal', 2, 3, 2, 3], ['equal', 3, 4, 3, 4], ['equal', 4, 5, 4, 5], ['insert', 5, 5, 5, 6]]
+list(sm.get_matching_blocks())
+# [[0, 0, 1], [2, 2, 1], [3, 3, 1], [4, 4, 1]]
 sm.ratio()
-sm.get_matching_blocks()
+# 0.7272727272727273
 ```
+
+Command line usage
+------------------
+Installing the package also installs an `edit-distance` command, which compares
+two files line by line and prints the edit distance between each pair of lines:
+
+    edit-distance file1.txt file2.txt
 
 Differences from difflib
 ------------------------

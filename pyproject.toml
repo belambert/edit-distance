@@ -5,12 +5,11 @@ description = "Computing edit distance on arbitrary Python sequences"
 authors = ["Ben Lambert <blambert@gmail.com>"]
 readme = "README.md"
 packages = [{include = "edit_distance"}]
-include = ["py.typed"]
 homepage = "https://github.com/belambert/edit-distance"
 repository = "https://github.com/belambert/edit-distance"
 documentation = "https://edit-distance.readthedocs.io/"
 keywords=["edit", "distance", "editdistance", "levenshtein"]
-license = "MIT"
+license = "Apache-2.0"
 classifiers = [
 	"Development Status :: 5 - Production/Stable",
         "Environment :: Console",
@@ -40,6 +39,7 @@ pytest-cov = "^7.0.0"
 unittest-xml-reporting = "^3.2.0"
 isort = "^6.0.1"
 pyupgrade = "^3.15.0"
+hypothesis = ">=6"
 
 [build-system]
 requires = ["poetry-core"]
