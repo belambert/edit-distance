@@ -36,8 +36,9 @@ REPLACE: str = "replace"
 # pylint: disable-next=too-many-positional-arguments
 def lowest_cost_action(ic, dc, sc, im, dm, sm, cost) -> str:
     """Given the following values, choose the action (insertion, deletion,
-    or substitution), that results in the lowest cost (ties are broken using
-    the 'match' score).  This is used within the dynamic programming algorithm.
+    or substitution), that results in the lowest cost (ties are broken in
+    favor of substitution, then insertion, then deletion).  This is used
+    within the dynamic programming algorithm.
 
     * ic - insertion cost
 
@@ -51,32 +52,20 @@ def lowest_cost_action(ic, dc, sc, im, dm, sm, cost) -> str:
 
     * sm - substitution match (score)
     """
-    best_action = None
-    best_match_count = -1
     min_cost = min(ic, dc, sc)
-    if min_cost == sc and cost == 0:
-        best_action = EQUAL
-        best_match_count = sm
-    elif min_cost == sc and cost == 1:
-        best_action = REPLACE
-        best_match_count = sm
-    elif min_cost == ic and im > best_match_count:
-        best_action = INSERT
-        best_match_count = im
-    elif min_cost == dc and dm > best_match_count:
-        best_action = DELETE
-        best_match_count = dm
-    else:
-        raise Exception("internal error: invalid lowest cost action")
-    return best_action
+    if min_cost == sc:
+        return EQUAL if cost == 0 else REPLACE
+    if min_cost == ic:
+        return INSERT
+    return DELETE
 
 
 # pylint: disable-next=too-many-positional-arguments
 def highest_match_action(ic, dc, sc, im, dm, sm, cost) -> str:
     """Given the following values, choose the action (insertion, deletion, or
-    substitution), that results in the highest match score (ties are broken
-    using the distance values).  This is used within the dynamic programming
-    algorithm.
+    substitution), that results in the highest match score (ties are broken in
+    favor of substitution, then insertion, then deletion).  This is used
+    within the dynamic programming algorithm.
 
     * ic - insertion cost
 
@@ -90,24 +79,12 @@ def highest_match_action(ic, dc, sc, im, dm, sm, cost) -> str:
 
     * sm - substitution match (score)
     """
-    best_action = None
-    lowest_cost = float("inf")
     max_match = max(im, dm, sm)
-    if max_match == sm and cost == 0:
-        best_action = EQUAL
-        lowest_cost = sm
-    elif max_match == sm and cost == 1:
-        best_action = REPLACE
-        lowest_cost = sm
-    elif max_match == im and ic < lowest_cost:
-        best_action = INSERT
-        lowest_cost = ic
-    elif max_match == dm and dc < lowest_cost:
-        best_action = DELETE
-        lowest_cost = dc
-    else:
-        raise Exception("internal error: invalid highest match action")
-    return best_action
+    if max_match == sm:
+        return EQUAL if cost == 0 else REPLACE
+    if max_match == im:
+        return INSERT
+    return DELETE
 
 
 class SequenceMatcher:
@@ -180,16 +157,16 @@ class SequenceMatcher:
     def get_opcodes(self):
         """Returns a list of opcodes.  Opcodes are the same as defined by
         :py:mod:`difflib`."""
-        if not self.opcodes:
+        if self.opcodes is None:
             d, m, opcodes = edit_distance_backpointer(
                 self.seq1,
                 self.seq2,
                 action_function=self.action_function,
                 test=self.test,
             )
-            if self.dist:
+            if self.dist is not None:
                 assert d == self.dist
-            if self._matches:
+            if self._matches is not None:
                 assert m == self._matches
             self.dist = d
             self._matches = m
@@ -202,6 +179,8 @@ class SequenceMatcher:
 
     def ratio(self) -> float:
         """Ratio of matches to the average sequence length."""
+        if not self.seq1 and not self.seq2:
+            return 1.0
         return 2.0 * self.matches() / (len(self.seq1) + len(self.seq2))
 
     def quick_ratio(self) -> float:
@@ -218,9 +197,9 @@ class SequenceMatcher:
         d, m = edit_distance(
             self.seq1, self.seq2, action_function=self.action_function, test=self.test
         )
-        if self.dist:
+        if self.dist is not None:
             assert d == self.dist
-        if self._matches:
+        if self._matches is not None:
             assert m == self._matches
         self.dist = d
         self._matches = m
@@ -229,7 +208,7 @@ class SequenceMatcher:
         """Returns the edit distance of the two loaded sequences.  This should
         be a little faster than getting the same information from
         :py:meth:`get_opcodes`."""
-        if not self.dist:
+        if self.dist is None:
             self._compute_distance_fast()
         return self.dist
 
@@ -237,7 +216,7 @@ class SequenceMatcher:
         """Returns the number of matches in the alignment of the two sequences.
         This should be a little faster than getting the same information from
         :py:meth:`get_opcodes`."""
-        if not self._matches:
+        if self._matches is None:
             self._compute_distance_fast()
         return self._matches
 
@@ -254,7 +233,7 @@ def edit_distance(
     m = len(seq1)
     n = len(seq2)
     # Special, easy cases:
-    if seq1 == seq2:
+    if test is operator.eq and seq1 == seq2:
         return 0, n
     if m == 0:
         return n, 0
@@ -369,7 +348,8 @@ def edit_distance_backpointer(
             d0[k] = d1[k]
             m0[k] = m1[k]
     opcodes = get_opcodes_from_bp_table(bp)
-    return d1[n], m1[n], opcodes
+    # d0/m0 hold the final column even when seq1 is empty and the loop never runs
+    return d0[n], m0[n], opcodes
 
 
 def get_opcodes_from_bp_table(bp):
@@ -380,14 +360,14 @@ def get_opcodes_from_bp_table(bp):
     while x != 0 or y != 0:
         this_bp = bp[x][y]
         if this_bp in [EQUAL, REPLACE]:
-            opcodes.append([this_bp, max(x - 1, 0), x, max(y - 1, 0), y])
+            opcodes.append([this_bp, x - 1, x, y - 1, y])
             x = x - 1
             y = y - 1
         elif this_bp == INSERT:
-            opcodes.append([INSERT, x, x, max(y - 1, 0), y])
+            opcodes.append([INSERT, x, x, y - 1, y])
             y = y - 1
         elif this_bp == DELETE:
-            opcodes.append([DELETE, max(x - 1, 0), x, max(y - 1, 0), max(y - 1, 0)])
+            opcodes.append([DELETE, x - 1, x, y, y])
             x = x - 1
         else:
             raise Exception("Invalid dynamic programming action in BP table!")

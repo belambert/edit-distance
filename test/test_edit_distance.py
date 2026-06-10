@@ -91,7 +91,7 @@ class TestEditDistance(unittest.TestCase):
                 ["equal", 0, 1, 0, 1],
                 ["insert", 1, 1, 1, 2],
                 ["equal", 1, 2, 2, 3],
-                ["delete", 2, 3, 2, 2],
+                ["delete", 2, 3, 3, 3],
                 ["replace", 3, 4, 3, 4],
                 ["replace", 4, 5, 4, 5],
             ],
@@ -125,6 +125,35 @@ class TestEditDistance(unittest.TestCase):
         self.assertEqual(edit_distance(a, b), (2, 0))
         self.assertEqual(edit_distance(b, a), (2, 0))
         self.assertEqual(edit_distance(a, a), (0, 0))
+
+    def test_edit_distance_backpointer_empty(self):
+        """Test the backpointer version against empty sequences."""
+        a = []
+        b = ["a", "c"]
+        b_opcodes = [["insert", 0, 0, 0, 1], ["insert", 0, 0, 1, 2]]
+        a_opcodes = [["delete", 0, 1, 0, 0], ["delete", 1, 2, 0, 0]]
+        self.assertEqual(edit_distance_backpointer(a, b), (2, 0, b_opcodes))
+        self.assertEqual(edit_distance_backpointer(b, a), (2, 0, a_opcodes))
+        self.assertEqual(edit_distance_backpointer(a, a), (0, 0, []))
+
+    def test_distance_then_opcodes(self):
+        """Distance computed via the fast path must agree with the
+        backpointer path (regression test for empty seq1)."""
+        sm = SequenceMatcher(a=[], b=["a"])
+        self.assertEqual(sm.distance(), 1)
+        self.assertEqual(sm.get_opcodes(), [["insert", 0, 0, 0, 1]])
+
+    def test_ratio_empty(self):
+        """Two empty sequences are identical, so ratio is 1.0."""
+        self.assertEqual(SequenceMatcher(a=[], b=[]).ratio(), 1.0)
+        self.assertEqual(SequenceMatcher(a=[], b=[]).distance(), 0)
+
+    def test_custom_test_function(self):
+        """A custom test function must be honored even when the sequences
+        compare equal with ==."""
+        a = ["a", "b"]
+        never_eq = lambda x, y: False  # noqa: E731
+        self.assertEqual(edit_distance(a, list(a), test=never_eq), (2, 0))
 
     def test_sequence_matcher(self):
         """Test the sequence matcher."""
@@ -180,7 +209,7 @@ class TestEditDistance(unittest.TestCase):
         target_opcodes = [
             ["delete", 0, 1, 0, 0],
             ["equal", 1, 2, 0, 1],
-            ["delete", 2, 3, 0, 0],
+            ["delete", 2, 3, 1, 1],
             ["equal", 3, 4, 1, 2],
             ["equal", 4, 5, 2, 3],
             ["insert", 5, 5, 3, 4],
@@ -256,7 +285,7 @@ class TestEditDistance(unittest.TestCase):
         target_opcodes = [
             ["delete", 0, 1, 0, 0],
             ["equal", 1, 2, 0, 1],
-            ["delete", 2, 3, 0, 0],
+            ["delete", 2, 3, 1, 1],
             ["equal", 3, 4, 1, 2],
             ["equal", 4, 5, 2, 3],
             ["insert", 5, 5, 3, 4],
