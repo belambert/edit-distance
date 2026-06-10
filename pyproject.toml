@@ -10,7 +10,7 @@ homepage = "https://github.com/belambert/edit-distance"
 repository = "https://github.com/belambert/edit-distance"
 documentation = "https://edit-distance.readthedocs.io/"
 keywords=["edit", "distance", "editdistance", "levenshtein"]
-license = "MIT"
+license = "Apache-2.0"
 classifiers = [
 	"Development Status :: 5 - Production/Stable",
         "Environment :: Console",
