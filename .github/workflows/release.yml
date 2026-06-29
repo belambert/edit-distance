@@ -9,21 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Python
-        uses: actions/setup-python@v6
         with:
-          python-version: '3.x'
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install build poetry
-      # the release tag is the single source of truth for the version, so a
-      # forgotten pyproject.toml bump can't produce a duplicate wheel
-      - name: Set version from release tag
-        run: poetry version "${GITHUB_REF_NAME#v}"
+          fetch-depth: 0  # hatch-vcs derives the version from the release tag
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.x"
       - name: Build package
-        run: python -m build
+        run: uv build
       - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: uv publish

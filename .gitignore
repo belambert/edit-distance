@@ -2,4 +2,12 @@ edit_distance.egg-info
 dist
 build
 .coverage
+coverage.xml
 venv
+.venv
+__pycache__
+.mypy_cache
+.pytest_cache
+.hypothesis
+poetry.lock
+uv.lock

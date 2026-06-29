@@ -1,52 +1,60 @@
-[tool.poetry]
+[project]
 name = "edit-distance"
-version = "1.0.9"
+dynamic = ["version"]
 description = "Computing edit distance on arbitrary Python sequences"
-authors = ["Ben Lambert <blambert@gmail.com>"]
+authors = [{ name = "Ben Lambert", email = "blambert@gmail.com" }]
 readme = "README.md"
-packages = [{include = "edit_distance"}]
-homepage = "https://github.com/belambert/edit-distance"
-repository = "https://github.com/belambert/edit-distance"
-documentation = "https://edit-distance.readthedocs.io/"
-keywords=["edit", "distance", "editdistance", "levenshtein"]
+requires-python = ">=3.9"
 license = "Apache-2.0"
+license-files = ["LICENSE"]
+keywords = ["edit", "distance", "editdistance", "levenshtein"]
 classifiers = [
-	"Development Status :: 5 - Production/Stable",
-        "Environment :: Console",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Programming Language :: Python :: 3.13",
-        "Topic :: Scientific/Engineering :: Artificial Intelligence",
-        "Topic :: Text Processing",
-        "Topic :: Utilities",
-        "License :: OSI Approved :: Apache Software License",
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing",
+    "Topic :: Utilities",
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.9,<4.0"
+[project.urls]
+Homepage = "https://github.com/belambert/edit-distance"
+Repository = "https://github.com/belambert/edit-distance"
+Documentation = "https://edit-distance.readthedocs.io/"
 
-[tool.poetry.group.dev.dependencies]
-black = "^25.9.0"
-coverage = "^7.10.7"
-pylint = "^3.3.8"
-mypy = "^1.18.2"
-pytest = "^8.4.2"
-pytest-cov = "^7.0.0"
-unittest-xml-reporting = "^3.2.0"
-isort = "^6.0.1"
-pyupgrade = "^3.15.0"
-hypothesis = ">=6"
+[project.scripts]
+edit-distance = "edit_distance.edit_distance:main"
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0,<26",
+    "coverage>=7.10.7,<8",
+    "pylint>=3.3.8,<4",
+    "mypy>=1.18.2,<2",
+    "pytest>=8.4.2,<9",
+    "pytest-cov>=7.0.0,<8",
+    "unittest-xml-reporting>=3.2.0,<4",
+    "isort>=6.0.1,<7",
+    "pyupgrade>=3.15.0,<4",
+    "hypothesis>=6",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
-[tool.poetry.scripts]
-edit-distance = "edit_distance.edit_distance:main"
+# version is derived from the git tag, so a release never needs a manual bump
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.wheel]
+packages = ["edit_distance"]
 
 [tool.pylint."messages control"]
 disable = [
