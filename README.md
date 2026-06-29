@@ -103,6 +103,13 @@ To run unit tests:
 To deploy...
 
 
+TODO
+----
+- Wire `docs/conf.py` to the package version (it still hardcodes `0.2.3`)
+  instead of tracking the version derived from the git tag.
+- Switch the PyPI publish workflow to a [Trusted Publisher](https://docs.pypi.org/trusted-publishers/)
+  (OIDC) so it no longer needs the `PYPI_API_TOKEN` secret.
+
 Contributing and code of conduct
 --------------------------------
 For contributions, it's best to Github issues and pull requests. Proper
