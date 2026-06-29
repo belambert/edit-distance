@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "edit-distance"
-version = "1.0.7"
+version = "1.0.9"
 description = "Computing edit distance on arbitrary Python sequences"
 authors = ["Ben Lambert <blambert@gmail.com>"]
 readme = "README.md"
