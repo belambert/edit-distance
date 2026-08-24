@@ -19,14 +19,6 @@ _____________________
    :members:
    :special-members:
 
-Match functions
-_______________
-These functions can be used to toggle whether we're minimizing edits
-or maximizing matches.
-
-.. autofunction:: lowest_cost_action
-.. autofunction:: highest_match_action
- 
 Indices and tables
 ==================
 
