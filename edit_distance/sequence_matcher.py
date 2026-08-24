@@ -20,7 +20,6 @@ A difflib-style interface to the edit distance routines.
 
 import operator
 from collections.abc import Sequence
-from typing import Optional
 
 from edit_distance.edit_distance import EQUAL, edit_distance, edit_distance_backpointer
 
@@ -33,8 +32,8 @@ class SequenceMatcher:
 
     def __init__(
         self,
-        a: Optional[Sequence] = None,
-        b: Optional[Sequence] = None,
+        a: Sequence | None = None,
+        b: Sequence | None = None,
         test=operator.eq,
     ):
         """

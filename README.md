@@ -34,7 +34,7 @@ To uninstall with pip:
 
     pip uninstall edit_distance
 
-This requires Python 3.9 or later.
+This requires Python 3.10 or later.
 
 API usage
 ---------

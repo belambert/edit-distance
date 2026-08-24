@@ -13,7 +13,7 @@ isort:
 	uv run isort --check-only --diff edit_distance test
 
 pyupgrade:
-	uv run pyupgrade --py39-plus edit_distance/*.py test/*.py
+	uv run pyupgrade --py310-plus edit_distance/*.py test/*.py
 
 test:
 	uv run pytest --cov=. --cov-report=xml .
