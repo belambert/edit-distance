@@ -15,6 +15,7 @@
 """
 Unit tests for edit_distance.
 """
+
 import unittest
 
 from edit_distance import SequenceMatcher, edit_distance, edit_distance_backpointer

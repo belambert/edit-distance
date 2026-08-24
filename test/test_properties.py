@@ -15,6 +15,7 @@
 """
 Property-based tests for edit_distance using hypothesis.
 """
+
 from hypothesis import given
 from hypothesis import strategies as st
 
