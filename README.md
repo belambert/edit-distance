@@ -81,14 +81,6 @@ Even if the alignment of the two sequences is identical to `difflib`,
 sequences.  The opcodes returned by this library represent individual character 
 operations, and thus should never span two or more characters.
 
-It's also possible to compute the maximum number of matches rather than the 
-minimum number of edits:
-
-```python
-sm = edit_distance.SequenceMatcher(a=ref, b=hyp, 
-     action_function=edit_distance.highest_match_action)
-```
-
 Notes
 -----
 This doesn't implement the 'junk' matching features in difflib.

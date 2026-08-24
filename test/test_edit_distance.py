@@ -17,12 +17,7 @@ Unit tests for edit_distance.
 """
 import unittest
 
-from edit_distance import (
-    SequenceMatcher,
-    edit_distance,
-    edit_distance_backpointer,
-    highest_match_action,
-)
+from edit_distance import SequenceMatcher, edit_distance, edit_distance_backpointer
 
 
 class TestEditDistance(unittest.TestCase):
@@ -75,31 +70,6 @@ class TestEditDistance(unittest.TestCase):
             ],
         )
         self.assertEqual(edit_distance_backpointer(a, b), bp_expected_result)
-
-    def test_edit_distance_highest_match(self):
-        """Test edit distance for 'hi my name is andy', maximizing matches rather than
-        minimizing edits."""
-        a = ["hi", "my", "name", "is", "andy"]
-        b = ["hi", "i'm", "my", "name's", "sandy"]
-        self.assertEqual(
-            edit_distance(a, b, action_function=highest_match_action), (4, 2)
-        )
-        bp_expected_result = (
-            4,
-            2,
-            [
-                ["equal", 0, 1, 0, 1],
-                ["insert", 1, 1, 1, 2],
-                ["equal", 1, 2, 2, 3],
-                ["delete", 2, 3, 3, 3],
-                ["replace", 3, 4, 3, 4],
-                ["replace", 4, 5, 4, 5],
-            ],
-        )
-        self.assertEqual(
-            edit_distance_backpointer(a, b, action_function=highest_match_action),
-            bp_expected_result,
-        )
 
     def test_edit_distance3(self):
         """Test for 'are you at work now'."""
