@@ -11,3 +11,4 @@ __pycache__
 .hypothesis
 poetry.lock
 uv.lock
+*.swp
