@@ -21,9 +21,18 @@ A difflib-style interface to the edit distance routines.
 import operator
 from collections.abc import Sequence
 
-from edit_distance.edit_distance import EQUAL, edit_distance, edit_distance_backpointer
+from edit_distance.edit_distance import (
+    EQUAL,
+    GapCostFunction,
+    SubstitutionCostFunction,
+    TestFunction,
+    edit_distance,
+    edit_distance_backpointer,
+)
 
 
+# Two sequences, four comparison/cost hooks, and three cached results.
+# pylint: disable-next=too-many-instance-attributes
 class SequenceMatcher:
     """
     Similar to the :py:mod:`difflib` :py:class:`~difflib.SequenceMatcher`, but
@@ -34,12 +43,20 @@ class SequenceMatcher:
         self,
         a: Sequence | None = None,
         b: Sequence | None = None,
-        test=operator.eq,
+        test: TestFunction = operator.eq,
+        *,
+        substitution_cost: SubstitutionCostFunction | None = None,
+        insertion_cost: GapCostFunction | None = None,
+        deletion_cost: GapCostFunction | None = None,
     ):
         """
         Initialize the object with sequences a and b.  Optionally, one can
         specify a test function that is used to compare sequence elements. This
         defaults to the built in ``eq`` operator (i.e. :py:func:`operator.eq`).
+
+        The three cost functions are passed straight through to
+        :py:func:`~edit_distance.edit_distance`; see that function for what
+        they mean and what they default to.
         """
         if a is None:
             a = []
@@ -49,8 +66,11 @@ class SequenceMatcher:
         self.seq2 = b
         self._reset_object()
         self.test = test
-        self.dist = None
-        self._matches = None
+        self.substitution_cost = substitution_cost
+        self.insertion_cost = insertion_cost
+        self.deletion_cost = deletion_cost
+        self.dist: float | None = None
+        self._matches: int | None = None
         self.opcodes = None
 
     def set_seqs(self, a: Sequence, b: Sequence) -> None:
@@ -97,6 +117,9 @@ class SequenceMatcher:
                 self.seq1,
                 self.seq2,
                 test=self.test,
+                substitution_cost=self.substitution_cost,
+                insertion_cost=self.insertion_cost,
+                deletion_cost=self.deletion_cost,
             )
             if self.dist is not None:
                 assert d == self.dist
@@ -128,7 +151,14 @@ class SequenceMatcher:
     def _compute_distance_fast(self) -> None:
         """Calls edit_distance, and asserts that if we already have values for
         matches and distance, that they match."""
-        d, m = edit_distance(self.seq1, self.seq2, test=self.test)
+        d, m = edit_distance(
+            self.seq1,
+            self.seq2,
+            test=self.test,
+            substitution_cost=self.substitution_cost,
+            insertion_cost=self.insertion_cost,
+            deletion_cost=self.deletion_cost,
+        )
         if self.dist is not None:
             assert d == self.dist
         if self._matches is not None:

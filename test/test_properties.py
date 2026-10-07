@@ -26,15 +26,38 @@ ints = st.lists(st.integers(0, 3), max_size=10)
 strs = st.text("abc", max_size=10)
 seqs = ints | strs
 pairs = st.tuples(ints, ints) | st.tuples(strs, strs)
+int_pairs = st.tuples(ints, ints)
 
 
-@given(pairs)
-def test_opcodes_contiguous_and_reconstruct(pair):
-    """Opcodes tile the alignment from (0, 0) to (len(a), len(b)) and
-    applying them to a yields b."""
-    a, b = pair
-    _, _, opcodes = edit_distance_backpointer(a, b)
+# Integer costs so the weighted assertions stay exact -- summing floats in a
+# different order than the search did would make them flaky.  Insertions and
+# deletions are priced differently so each boundary is exercised on its own,
+# and substitutions sometimes cost more than a gap pair and sometimes less.
+def sub_c(x, y):
+    """Substitution cost: free for a match, otherwise 2 to 5."""
+    return 0 if x == y else 2 + abs(x - y)
 
+
+def ins_c(y):
+    """Insertion cost: 1 to 4."""
+    return 1 + y
+
+
+def del_c(x):
+    """Deletion cost: 2 to 5."""
+    return 2 + x
+
+
+WEIGHTED = {
+    "substitution_cost": sub_c,
+    "insertion_cost": ins_c,
+    "deletion_cost": del_c,
+}
+
+
+def check_opcodes_tile(a, b, opcodes):
+    """Opcodes tile the alignment from (0, 0) to (len(a), len(b)) and applying
+    them to a yields b."""
     pos = (0, 0)
     out = []
     for tag, i1, i2, j1, j2 in opcodes:
@@ -50,6 +73,24 @@ def test_opcodes_contiguous_and_reconstruct(pair):
 
     assert pos == (len(a), len(b))
     assert out == list(b)
+
+
+@given(pairs)
+def test_opcodes_contiguous_and_reconstruct(pair):
+    """Opcodes tile the alignment from (0, 0) to (len(a), len(b)) and
+    applying them to a yields b."""
+    a, b = pair
+    _, _, opcodes = edit_distance_backpointer(a, b)
+    check_opcodes_tile(a, b, opcodes)
+
+
+@given(int_pairs)
+def test_weighted_opcodes_contiguous_and_reconstruct(pair):
+    """Custom costs change which alignment wins, not the structural
+    guarantees the opcodes have to satisfy."""
+    a, b = pair
+    _, _, opcodes = edit_distance_backpointer(a, b, **WEIGHTED)
+    check_opcodes_tile(a, b, opcodes)
 
 
 @given(pairs)
@@ -92,6 +133,34 @@ def test_agrees_with_wagner_fischer(pair):
     assert edit_distance_backpointer(a, b)[0] == expected
 
 
+@given(int_pairs)
+def test_weighted_agrees_with_wagner_fischer(pair):
+    """Both entry points agree with a reference weighted Wagner-Fischer
+    distance, whose boundary rows are cumulative sums of the gap costs."""
+    a, b = pair
+    expected = weighted_wagner_fischer(a, b)
+    assert edit_distance(a, b, **WEIGHTED)[0] == expected
+    assert edit_distance_backpointer(a, b, **WEIGHTED)[0] == expected
+
+
+@given(int_pairs)
+def test_weighted_distance_equals_summed_opcode_costs(pair):
+    """The distance is exactly what the returned alignment costs.  This is the
+    weighted generalization of counting non-equal opcodes."""
+    a, b = pair
+    dist, matches, opcodes = edit_distance_backpointer(a, b, **WEIGHTED)
+    total = 0
+    for tag, i1, _, j1, _ in opcodes:
+        if tag in ("equal", "replace"):
+            total += sub_c(a[i1], b[j1])
+        elif tag == "insert":
+            total += ins_c(b[j1])
+        else:
+            total += del_c(a[i1])
+    assert total == dist
+    assert (dist, matches) == edit_distance(a, b, **WEIGHTED)
+
+
 def wagner_fischer(a, b):
     """Reference Levenshtein distance using the full DP table."""
     m, n = len(a), len(b)
@@ -104,4 +173,23 @@ def wagner_fischer(a, b):
         for j in range(1, n + 1):
             cost = 0 if a[i - 1] == b[j - 1] else 1
             d[i][j] = min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost)
+    return d[m][n]
+
+
+def weighted_wagner_fischer(a, b):
+    """Reference weighted distance using the full DP table.  Written
+    independently of the implementation, including the boundary rows."""
+    m, n = len(a), len(b)
+    d = [[0] * (n + 1) for _ in range(m + 1)]
+    for i in range(1, m + 1):
+        d[i][0] = d[i - 1][0] + del_c(a[i - 1])
+    for j in range(1, n + 1):
+        d[0][j] = d[0][j - 1] + ins_c(b[j - 1])
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            d[i][j] = min(
+                d[i - 1][j] + del_c(a[i - 1]),
+                d[i][j - 1] + ins_c(b[j - 1]),
+                d[i - 1][j - 1] + sub_c(a[i - 1], b[j - 1]),
+            )
     return d[m][n]

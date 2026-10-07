@@ -81,6 +81,57 @@ Even if the alignment of the two sequences is identical to `difflib`,
 sequences.  The opcodes returned by this library represent individual character 
 operations, and thus should never span two or more characters.
 
+Custom costs
+------------
+By default every edit costs one and a match costs nothing.  Three optional cost
+functions let you change that:
+
+```python
+sm = edit_distance.SequenceMatcher(
+    a=ref, b=hyp,
+    substitution_cost=lambda x, y: 0 if x == y else 1,
+    insertion_cost=lambda y: 1,
+    deletion_cost=lambda x: 1,
+)
+```
+
+They are also accepted by `edit_distance()` and `edit_distance_backpointer()`,
+as keyword arguments.  Costs may be fractional, in which case the distance is a
+float.
+
+`substitution_cost` is consulted for *every* aligned pair, including pairs that
+compare equal, so a custom function has to handle both cases -- returning a flat
+penalty would charge for matches too:
+
+```python
+# charges 0.5 even when x == y
+substitution_cost=lambda x, y: 0.5
+```
+
+Costs and equality are separate concerns.  `test` decides whether two elements
+are equal, which determines the opcode label and the match count; the cost
+functions only decide the price.  So a free substitution that `test` rejects is
+still a `replace` and still isn't a match, and a substitution that costs
+something but that `test` accepts is still an `equal` and still is.
+
+Two consequences worth knowing:
+
+- A substitution costing more than an insertion plus a deletion is never
+  chosen, because the search gets the same result more cheaply by deleting and
+  then inserting.  Substitution costs are effectively capped at `ins + del`.
+- `distance(a, a) == 0` only holds if a match costs nothing, and
+  `distance(a, b) == distance(b, a)` only holds if insertions and deletions
+  cost the same.  Keeping the result a true metric is up to you.
+
+Setting the substitution cost to the gap-pair total maximizes the number of
+matches rather than minimizing edits, which is what the removed
+`highest_match_action` used to do:
+
+```python
+sm = edit_distance.SequenceMatcher(a=ref, b=hyp,
+     substitution_cost=lambda x, y: 0 if x == y else 2)
+```
+
 Notes
 -----
 This doesn't implement the 'junk' matching features in difflib.
